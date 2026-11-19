@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Facturas · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <script type="module" src="../ui/pages/facturas/index.ts"></script>
+</head>
+<body class="invoices-page">
+  <header id="app-nav"></header>
+  <main class="container py-4">
+    <div class="page-header">
+      <h1>Facturas</h1>
+      <a href="/ventas" class="btn btn-accent">Nueva venta</a>
+    </div>
+
+    <section class="card shadow-sm" aria-labelledby="invoices-title">
+      <h2 id="invoices-title" class="visually-hidden">Listado de facturas</h2>
+      <div class="card-body border-bottom">
+        <form id="invoice-filters" class="invoice-filters" role="search" autocomplete="off">
+          <div class="list-toolbar">
+            <div class="list-search">
+              <label for="invoice-search" class="visually-hidden">Buscar facturas</label>
+              <input type="search" class="form-control" id="invoice-search" name="q" maxlength="100"
+                placeholder="Nº de factura, cliente o documento" aria-describedby="invoice-count">
+            </div>
+            <div class="btn-group btn-group-sm invoice-status-filter" role="group" aria-label="Filtrar por estado">
+              <input type="radio" class="btn-check" name="estado" id="invoice-status-all" value="" autocomplete="off" checked>
+              <label class="btn btn-outline-secondary" for="invoice-status-all">Todas</label>
+              <input type="radio" class="btn-check" name="estado" id="invoice-status-paid" value="paid" autocomplete="off">
+              <label class="btn btn-outline-secondary" for="invoice-status-paid">Pagadas</label>
+              <input type="radio" class="btn-check" name="estado" id="invoice-status-pending" value="pending" autocomplete="off">
+              <label class="btn btn-outline-secondary" for="invoice-status-pending">Pendientes</label>
+              <input type="radio" class="btn-check" name="estado" id="invoice-status-void" value="void" autocomplete="off">
+              <label class="btn btn-outline-secondary" for="invoice-status-void">Anuladas</label>
+            </div>
+          </div>
+          <div class="invoice-dates">
+            <div class="invoice-date-field">
+              <label for="invoice-from" class="form-label small text-body-secondary mb-1">Desde</label>
+              <input type="date" class="form-control form-control-sm" id="invoice-from" name="from">
+            </div>
+            <div class="invoice-date-field">
+              <label for="invoice-to" class="form-label small text-body-secondary mb-1">Hasta</label>
+              <input type="date" class="form-control form-control-sm" id="invoice-to" name="to">
+            </div>
+            <div class="invoice-date-shortcuts" role="group" aria-label="Atajos de fecha">
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-range="today">Hoy</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-range="week">Esta semana</button>
+              <button type="button" class="btn btn-sm btn-outline-secondary" data-range="month">Este mes</button>
+              <button type="button" class="btn btn-sm btn-link text-decoration-none d-none" id="invoice-dates-clear">Quitar fechas</button>
+            </div>
+          </div>
+          <div id="invoice-customer-filter" class="invoice-customer-filter d-none">
+            <span class="badge rounded-pill text-bg-light border invoice-customer-chip">
+              <span id="invoice-customer-label" class="text-truncate"></span>
+              <button type="button" class="btn-close" id="invoice-customer-clear" aria-label="Quitar filtro de cliente"></button>
+            </span>
+          </div>
+        </form>
+      </div>
+
+      <div id="invoices-loading" class="d-flex justify-content-center align-items-center gap-2 py-5 text-secondary" role="status">
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span>Cargando facturas…</span>
+      </div>
+
+      <div id="invoices-error" class="card-body d-none">
+        <div class="alert alert-danger mb-0" role="alert">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <span>No se pudieron cargar las facturas. <span id="invoices-error-message"></span></span>
+            <button type="button" id="invoices-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="invoices-empty" class="card-body empty-state d-none">
+        <p id="invoices-empty-title" class="empty-state-title"></p>
+        <p id="invoices-empty-text" class="mb-3"></p>
+        <a id="invoices-empty-sale" href="/ventas" class="btn btn-outline-primary">Registrar una venta</a>
+        <button type="button" id="invoices-empty-clear" class="btn btn-outline-primary">Quitar filtros</button>
+      </div>
+
+      <div id="invoices-list" class="d-none">
+        <dl id="invoice-totals" class="invoice-totals border-bottom" aria-label="Totales del filtro">
+          <div><dt>Facturas</dt><dd id="invoice-totals-count"></dd></div>
+          <div><dt>Total vendido</dt><dd id="invoice-totals-amount" class="amount-cell"></dd></div>
+          <div><dt>Por cobrar</dt><dd id="invoice-totals-balance" class="amount-cell"></dd></div>
+        </dl>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 list-table invoices-table">
+            <thead>
+              <tr>
+                <th scope="col">Nº</th>
+                <th scope="col" class="d-none d-md-table-cell">Fecha</th>
+                <th scope="col">Cliente</th>
+                <th scope="col" class="d-none d-lg-table-cell">Condición</th>
+                <th scope="col" class="d-none d-sm-table-cell">Estado</th>
+                <th scope="col">Total</th>
+              </tr>
+            </thead>
+            <tbody id="invoices-body"></tbody>
+          </table>
+        </div>
+        <nav class="card-footer bg-body d-flex flex-wrap align-items-center justify-content-between gap-2" aria-label="Paginación de facturas">
+          <span id="invoice-count" class="small text-body-secondary" aria-live="polite"></span>
+          <div class="btn-group btn-group-sm">
+            <button type="button" id="invoices-prev" class="btn btn-outline-secondary">Anterior</button>
+            <button type="button" id="invoices-next" class="btn btn-outline-secondary">Siguiente</button>
+          </div>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal fade" id="invoice-modal" tabindex="-1" role="dialog" aria-labelledby="invoice-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable modal-fullscreen-md-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <div class="min-w-0">
+            <h2 class="modal-title fs-5 d-flex flex-wrap align-items-center gap-2" id="invoice-modal-title">Factura</h2>
+            <p id="invoice-modal-date" class="small text-body-secondary mb-0"></p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="invoice-detail-loading" class="d-flex justify-content-center align-items-center gap-2 py-5 text-secondary" role="status">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span>Cargando factura…</span>
+          </div>
+          <div id="invoice-detail-error" class="d-none">
+            <div class="alert alert-danger mb-0" role="alert">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                <span id="invoice-detail-error-message"></span>
+                <button type="button" id="invoice-detail-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+              </div>
+            </div>
+          </div>
+          <div id="invoice-detail" class="d-none">
+            <div id="invoice-void-notice" class="alert alert-secondary d-none" role="note"></div>
+            <dl class="sale-review-meta invoice-meta">
+              <div><dt>Cliente</dt><dd id="invoice-customer"></dd></div>
+              <div><dt>Condición</dt><dd id="invoice-payment-type"></dd></div>
+              <div><dt>Tasa usada</dt><dd id="invoice-rate"></dd></div>
+            </dl>
+            <p id="invoice-notes" class="small mb-3 d-none"></p>
+            <div class="table-responsive">
+              <table class="table table-sm align-middle mb-3 invoice-items-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Producto</th>
+                    <th scope="col" class="text-center">Cant.</th>
+                    <th scope="col" class="d-none d-sm-table-cell">P. unit.</th>
+                    <th scope="col">Importe</th>
+                  </tr>
+                </thead>
+                <tbody id="invoice-items"></tbody>
+              </table>
+            </div>
+            <dl class="pos-totals invoice-detail-totals">
+              <div class="pos-totals-row">
+                <dt>Subtotal</dt>
+                <dd id="invoice-subtotal" class="amount-cell"></dd>
+              </div>
+              <div class="pos-totals-row" id="invoice-tax-row">
+                <dt id="invoice-tax-label">IVA</dt>
+                <dd id="invoice-tax" class="amount-cell"></dd>
+              </div>
+              <div class="pos-totals-total">
+                <dt>Total</dt>
+                <dd>
+                  <span id="invoice-total-primary" class="pos-total-primary"></span>
+                  <span id="invoice-total-secondary" class="pos-total-secondary"></span>
+                </dd>
+              </div>
+            </dl>
+            <section id="invoice-payments" class="invoice-payments d-none" aria-labelledby="invoice-payments-title">
+              <h3 id="invoice-payments-title" class="fs-6 fw-semibold mb-2">Abonos</h3>
+              <p id="invoice-payments-empty" class="small text-body-secondary mb-2">Aún no hay abonos registrados.</p>
+              <ul id="invoice-payments-list" class="list-group list-group-flush mb-2"></ul>
+              <dl class="pos-totals mb-0">
+                <div class="pos-totals-row">
+                  <dt>Abonado</dt>
+                  <dd id="invoice-paid" class="amount-cell"></dd>
+                </div>
+                <div class="pos-totals-row">
+                  <dt class="fw-semibold text-body">Saldo pendiente</dt>
+                  <dd id="invoice-balance" class="amount-cell fw-semibold"></dd>
+                </div>
+              </dl>
+              <p id="invoice-balance-note" class="pos-rate-used mb-0"></p>
+            </section>
+          </div>
+          <form id="invoice-payment-form" class="d-none" autocomplete="off" aria-label="Registrar abono"></form>
+          <form id="invoice-void-form" class="d-none" autocomplete="off">
+            <p class="mb-2">Vas a anular la factura <strong id="invoice-void-number"></strong> por <strong id="invoice-void-total"></strong>.</p>
+            <ul class="small mb-3 ps-3">
+              <li id="invoice-void-stock"></li>
+              <li>La factura no se borra: queda en el listado marcada como anulada y deja de sumar en los totales.</li>
+              <li>Esta acción no se puede deshacer.</li>
+            </ul>
+            <div id="invoice-void-payments" class="alert alert-warning small d-none" role="alert"></div>
+            <label for="invoice-void-reason" class="form-label">Motivo <span class="text-body-secondary small">(opcional)</span></label>
+            <input type="text" class="form-control" id="invoice-void-reason" name="reason" maxlength="200"
+              placeholder="Ej.: error en la cantidad, devolución del cliente">
+          </form>
+        </div>
+        <div class="modal-footer" id="invoice-detail-actions">
+          <button type="button" class="btn btn-outline-danger me-auto d-none" id="invoice-void">Anular</button>
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-success d-none" id="invoice-pay">Registrar abono</button>
+          <button type="button" class="btn btn-primary" id="invoice-print" disabled>Imprimir</button>
+        </div>
+        <div class="modal-footer d-none" id="invoice-payment-actions">
+          <button type="button" class="btn btn-outline-secondary" id="invoice-payment-cancel">Volver</button>
+          <button type="submit" class="btn btn-success" id="invoice-payment-submit" form="invoice-payment-form">Registrar abono</button>
+        </div>
+        <div class="modal-footer d-none" id="invoice-void-actions">
+          <button type="button" class="btn btn-outline-secondary" id="invoice-void-cancel">Volver</button>
+          <button type="submit" class="btn btn-danger" id="invoice-void-submit" form="invoice-void-form">Anular factura</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

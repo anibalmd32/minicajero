@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Factura · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <link rel="stylesheet" href="../ui/invoice-print.css">
+  <style id="print-page-rule">@page { size: letter portrait; margin: 14mm 14mm 16mm; }</style>
+  <script type="module" src="../ui/pages/factura-imprimir/index.ts"></script>
+</head>
+<body class="print-page print-format-letter">
+  <div class="print-toolbar d-print-none" role="region" aria-label="Opciones de impresión">
+    <div class="container print-toolbar-inner">
+      <a href="/facturas" id="print-back" class="btn btn-outline-secondary">Volver</a>
+      <p id="print-toolbar-title" class="print-toolbar-title">Factura</p>
+      <div class="print-toolbar-actions">
+        <label for="print-format" class="visually-hidden">Formato de papel</label>
+        <select id="print-format" class="form-select print-format-select"></select>
+        <button type="button" id="print-submit" class="btn btn-primary" disabled>Imprimir / Guardar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="print-main">
+    <div id="print-loading" class="print-state d-print-none" role="status">
+      <div class="spinner-border text-primary" aria-hidden="true"></div>
+      <p class="mb-0 mt-2 text-body-secondary">Cargando factura…</p>
+    </div>
+
+    <div id="print-error" class="print-state d-none d-print-none" role="alert">
+      <p class="empty-state-title" id="print-error-title">No se pudo cargar la factura</p>
+      <p id="print-error-message" class="text-body-secondary"></p>
+      <div class="d-flex flex-wrap justify-content-center gap-2">
+        <button type="button" id="print-retry" class="btn btn-primary">Reintentar</button>
+        <a href="/facturas" class="btn btn-outline-secondary">Ir a facturas</a>
+      </div>
+    </div>
+
+    <div id="print-business-hint" class="alert alert-info print-hint d-none d-print-none" role="note">
+      Faltan datos del negocio en la factura (nombre, RIF, dirección o teléfono).
+      <a href="/configuracion" class="alert-link">Complétalos en Configuración</a>.
+    </div>
+
+    <article id="invoice-sheet" class="invoice-sheet d-none" aria-label="Factura">
+      <p id="sheet-watermark" class="sheet-watermark d-none" aria-hidden="true">ANULADA</p>
+
+      <header class="sheet-header">
+        <div class="sheet-business">
+          <div class="sheet-business-info">
+            <p id="sheet-business-name" class="sheet-business-name"></p>
+            <p id="sheet-business-rif" class="d-none"></p>
+            <p id="sheet-business-address" class="d-none"></p>
+            <p id="sheet-business-phone" class="d-none"></p>
+          </div>
+        </div>
+        <div class="sheet-meta">
+          <p class="sheet-doc-title">Factura</p>
+          <dl class="sheet-meta-list">
+            <div><dt>N.º</dt><dd id="sheet-number"></dd></div>
+            <div><dt>Fecha</dt><dd id="sheet-date"></dd></div>
+            <div><dt>Hora</dt><dd id="sheet-time"></dd></div>
+          </dl>
+        </div>
+      </header>
+
+      <div id="sheet-void" class="sheet-void d-none"></div>
+
+      <section class="sheet-parties">
+        <div class="sheet-customer">
+          <p class="sheet-label">Cliente</p>
+          <p id="sheet-customer-name" class="sheet-customer-name"></p>
+          <p id="sheet-customer-document" class="d-none"></p>
+          <p id="sheet-customer-phone" class="d-none"></p>
+        </div>
+        <div class="sheet-condition">
+          <p class="sheet-label">Condición</p>
+          <p id="sheet-payment-type" class="sheet-condition-value"></p>
+        </div>
+      </section>
+
+      <table class="sheet-items">
+        <thead>
+          <tr>
+            <th scope="col" class="col-qty">Cant.</th>
+            <th scope="col" class="col-desc">Descripción</th>
+            <th scope="col" class="col-unit">P. unitario</th>
+            <th scope="col" class="col-amount">Importe</th>
+          </tr>
+        </thead>
+        <tbody id="sheet-items"></tbody>
+      </table>
+
+      <section class="sheet-summary">
+        <div class="sheet-rate">
+          <p><span class="sheet-label-inline">Tasa usada:</span> <span id="sheet-rate"></span></p>
+          <p id="sheet-notes" class="sheet-notes d-none"></p>
+        </div>
+        <table class="sheet-totals">
+          <tbody>
+            <tr>
+              <th scope="row">Subtotal</th>
+              <td id="sheet-subtotal"></td>
+            </tr>
+            <tr>
+              <th scope="row" id="sheet-tax-label">IVA</th>
+              <td id="sheet-tax"></td>
+            </tr>
+            <tr class="sheet-total-row">
+              <th scope="row">Total USD</th>
+              <td id="sheet-total-usd"></td>
+            </tr>
+            <tr class="sheet-total-row">
+              <th scope="row">Total Bs</th>
+              <td id="sheet-total-bs"></td>
+            </tr>
+          </tbody>
+          <tbody id="sheet-credit" class="sheet-credit d-none">
+            <tr>
+              <th scope="row">Abonado</th>
+              <td id="sheet-paid"></td>
+            </tr>
+            <tr class="sheet-balance-row">
+              <th scope="row">Saldo pendiente</th>
+              <td id="sheet-balance"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <p id="sheet-balance-note" class="sheet-balance-note d-none"></p>
+    </article>
+  </main>
+</body>
+</html>

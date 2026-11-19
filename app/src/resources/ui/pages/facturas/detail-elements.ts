@@ -1,0 +1,51 @@
+import { Modal } from "../../bootstrap";
+import { requireElement } from "../../dom";
+import { createPaymentForm } from "../../payment-form";
+
+const modalElement = requireElement<HTMLElement>("invoice-modal");
+
+/** Elementos del modal de detalle de factura, buscados una sola vez al cargar. */
+export const detailElements = {
+  modalElement,
+  modal: Modal.getOrCreateInstance(modalElement),
+  title: requireElement<HTMLElement>("invoice-modal-title"),
+  dateText: requireElement<HTMLElement>("invoice-modal-date"),
+  loading: requireElement<HTMLElement>("invoice-detail-loading"),
+  loadError: requireElement<HTMLElement>("invoice-detail-error"),
+  loadErrorMessage: requireElement<HTMLElement>("invoice-detail-error-message"),
+  retryButton: requireElement<HTMLButtonElement>("invoice-detail-retry"),
+  detail: requireElement<HTMLElement>("invoice-detail"),
+  voidNotice: requireElement<HTMLElement>("invoice-void-notice"),
+  customerText: requireElement<HTMLElement>("invoice-customer"),
+  paymentTypeText: requireElement<HTMLElement>("invoice-payment-type"),
+  rateText: requireElement<HTMLElement>("invoice-rate"),
+  notesText: requireElement<HTMLElement>("invoice-notes"),
+  itemsBody: requireElement<HTMLTableSectionElement>("invoice-items"),
+  subtotalText: requireElement<HTMLElement>("invoice-subtotal"),
+  taxRow: requireElement<HTMLElement>("invoice-tax-row"),
+  taxLabel: requireElement<HTMLElement>("invoice-tax-label"),
+  taxText: requireElement<HTMLElement>("invoice-tax"),
+  totalPrimary: requireElement<HTMLElement>("invoice-total-primary"),
+  totalSecondary: requireElement<HTMLElement>("invoice-total-secondary"),
+  paymentsSection: requireElement<HTMLElement>("invoice-payments"),
+  paymentsEmpty: requireElement<HTMLElement>("invoice-payments-empty"),
+  paymentsList: requireElement<HTMLUListElement>("invoice-payments-list"),
+  paidText: requireElement<HTMLElement>("invoice-paid"),
+  balanceText: requireElement<HTMLElement>("invoice-balance"),
+  balanceNote: requireElement<HTMLElement>("invoice-balance-note"),
+  detailActions: requireElement<HTMLElement>("invoice-detail-actions"),
+  voidButton: requireElement<HTMLButtonElement>("invoice-void"),
+  printButton: requireElement<HTMLButtonElement>("invoice-print"),
+  voidForm: requireElement<HTMLFormElement>("invoice-void-form"),
+  voidNumber: requireElement<HTMLElement>("invoice-void-number"),
+  voidTotal: requireElement<HTMLElement>("invoice-void-total"),
+  voidStock: requireElement<HTMLElement>("invoice-void-stock"),
+  voidPayments: requireElement<HTMLElement>("invoice-void-payments"),
+  voidReason: requireElement<HTMLInputElement>("invoice-void-reason"),
+  voidActions: requireElement<HTMLElement>("invoice-void-actions"),
+  voidCancel: requireElement<HTMLButtonElement>("invoice-void-cancel"),
+  payButton: requireElement<HTMLButtonElement>("invoice-pay"),
+  paymentForm: createPaymentForm(requireElement<HTMLFormElement>("invoice-payment-form"), "invoice-payment"),
+  paymentActions: requireElement<HTMLElement>("invoice-payment-actions"),
+  paymentCancel: requireElement<HTMLButtonElement>("invoice-payment-cancel"),
+};
