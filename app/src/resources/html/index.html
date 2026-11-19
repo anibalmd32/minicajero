@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inicio · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <script type="module" src="../ui/pages/inicio/index.ts"></script>
+</head>
+<body class="dashboard-page">
+  <header id="app-nav"></header>
+  <main class="container py-4">
+    <div class="page-header">
+      <div class="min-w-0">
+        <h1>Inicio</h1>
+        <p id="dashboard-date" class="dashboard-date text-body-secondary mb-0"></p>
+      </div>
+      <button type="button" id="dashboard-reload" class="btn btn-sm btn-outline-secondary" title="Volver a consultar los datos del panel">Actualizar datos</button>
+    </div>
+
+    <nav class="dashboard-actions mb-4" aria-label="Accesos rápidos">
+      <a href="/ventas" class="btn btn-accent btn-lg dashboard-action-main">Nueva venta</a>
+      <a href="/clientes?nuevo=1" class="btn btn-outline-secondary dashboard-action">Nuevo cliente</a>
+      <a href="/inventario?nuevo=1" class="btn btn-outline-secondary dashboard-action">Nuevo producto</a>
+    </nav>
+
+    <div id="dashboard-loading" class="d-flex justify-content-center align-items-center gap-2 py-5 text-secondary" role="status">
+      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      <span>Cargando resumen…</span>
+    </div>
+
+    <div id="dashboard-error" class="alert alert-danger d-none" role="alert">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <span>No se pudo cargar el resumen. <span id="dashboard-error-message"></span></span>
+        <button type="button" id="dashboard-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+      </div>
+    </div>
+
+    <div id="dashboard-content" class="d-none">
+      <section id="dashboard-setup" class="card shadow-sm mb-4 border-primary-subtle d-none" aria-labelledby="dashboard-setup-title">
+        <div class="card-body">
+          <h2 id="dashboard-setup-title" class="h5 mb-1">Bienvenido a MiniCajero</h2>
+          <p class="text-body-secondary mb-3">Completa estos pasos para empezar a facturar.</p>
+          <div id="dashboard-setup-rate" class="alert alert-warning d-none" role="alert">
+            <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <span><strong>Falta la tasa de cambio.</strong> No se pudo obtener la tasa oficial; fija una tasa manual para poder vender.</span>
+              <a class="btn btn-sm btn-warning" href="/configuracion#tasa">Fijar tasa</a>
+            </div>
+          </div>
+          <ol id="dashboard-steps" class="dashboard-steps list-unstyled mb-0"></ol>
+        </div>
+      </section>
+
+      <section class="card dashboard-kpis mb-4" aria-label="Indicadores">
+        <article class="dashboard-kpi">
+          <div class="dashboard-kpi-body">
+            <h2 class="dashboard-kpi-label">Ventas de hoy</h2>
+            <p class="dashboard-kpi-value" id="kpi-today-value"></p>
+            <p class="dashboard-kpi-secondary" id="kpi-today-secondary"></p>
+            <p class="dashboard-kpi-meta" id="kpi-today-meta"></p>
+            <a id="kpi-today-link" class="stretched-link dashboard-kpi-link" href="/facturas">Ver facturas de hoy</a>
+          </div>
+        </article>
+        <article class="dashboard-kpi">
+          <div class="dashboard-kpi-body">
+            <h2 class="dashboard-kpi-label">Ventas del mes</h2>
+            <p class="dashboard-kpi-value" id="kpi-month-value"></p>
+            <p class="dashboard-kpi-secondary" id="kpi-month-secondary"></p>
+            <p class="dashboard-kpi-meta" id="kpi-month-meta"></p>
+            <a id="kpi-month-link" class="stretched-link dashboard-kpi-link" href="/facturas">Ver facturas del mes</a>
+          </div>
+        </article>
+        <article class="dashboard-kpi" id="kpi-debt">
+          <div class="dashboard-kpi-body">
+            <h2 class="dashboard-kpi-label">Por cobrar en fiado</h2>
+            <p class="dashboard-kpi-value" id="kpi-debt-value"></p>
+            <p class="dashboard-kpi-secondary" id="kpi-debt-secondary"></p>
+            <p class="dashboard-kpi-meta" id="kpi-debt-meta"></p>
+            <a class="stretched-link dashboard-kpi-link" href="/clientes?deudores=1">Ver deudores</a>
+          </div>
+        </article>
+        <article class="dashboard-kpi" id="kpi-stock">
+          <div class="dashboard-kpi-body">
+            <h2 class="dashboard-kpi-label">Stock bajo</h2>
+            <p class="dashboard-kpi-value" id="kpi-stock-value"></p>
+            <p class="dashboard-kpi-secondary" id="kpi-stock-secondary"></p>
+            <p class="dashboard-kpi-meta" id="kpi-stock-meta"></p>
+            <a class="stretched-link dashboard-kpi-link" href="/inventario?filtro=bajo">Ver productos</a>
+          </div>
+        </article>
+      </section>
+
+      <div class="row g-4">
+        <div class="col-lg-8 d-flex flex-column gap-4 min-w-0">
+          <section class="card shadow-sm" aria-labelledby="dashboard-chart-title">
+            <div class="card-header bg-body d-flex flex-wrap align-items-baseline justify-content-between gap-2">
+              <h2 id="dashboard-chart-title" class="h6 mb-0">Ventas de los últimos 7 días</h2>
+              <span id="dashboard-chart-total" class="small text-body-secondary"></span>
+            </div>
+            <div class="card-body dashboard-chart-wrap">
+              <p id="dashboard-chart-empty" class="dashboard-chart-empty d-none">Sin ventas en los últimos 7 días</p>
+              <ol id="dashboard-chart" class="dashboard-chart list-unstyled mb-0"></ol>
+            </div>
+          </section>
+
+          <section class="card shadow-sm" aria-labelledby="dashboard-invoices-title">
+            <div class="card-header bg-body d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <h2 id="dashboard-invoices-title" class="h6 mb-0">Últimas facturas</h2>
+              <a href="/facturas" class="small">Ver todas</a>
+            </div>
+            <div id="dashboard-invoices-empty" class="card-body empty-state d-none">
+              <p class="empty-state-title">Aún no hay ventas</p>
+              <p class="mb-3">Cuando registres una venta aparecerá aquí.</p>
+              <a href="/ventas" class="btn btn-primary">Hacer la primera venta</a>
+            </div>
+            <div id="dashboard-invoices" class="table-responsive">
+              <table class="table table-hover align-middle mb-0 list-table dashboard-invoices-table">
+                <thead class="table-light">
+                  <tr>
+                    <th scope="col">Factura</th>
+                    <th scope="col" class="d-none d-md-table-cell">Fecha</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Total</th>
+                    <th scope="col" class="d-none d-sm-table-cell">Estado</th>
+                  </tr>
+                </thead>
+                <tbody id="dashboard-invoices-body"></tbody>
+              </table>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-lg-4 d-flex flex-column gap-4 min-w-0">
+          <section class="card shadow-sm" aria-labelledby="dashboard-rate-title">
+            <div class="card-header bg-body d-flex align-items-center justify-content-between gap-2">
+              <h2 id="dashboard-rate-title" class="h6 mb-0">Tasa vigente</h2>
+              <span id="dashboard-rate-badge" class="badge rounded-pill text-bg-secondary text-wrap text-start">Consultando…</span>
+            </div>
+            <div class="card-body">
+              <p class="dashboard-rate-value mb-1"><span id="dashboard-rate-value">—</span></p>
+              <p id="dashboard-rate-meta" class="small text-body-secondary mb-2"></p>
+              <p id="dashboard-rate-detail" class="small text-body-secondary mb-3"></p>
+              <div class="d-flex flex-wrap gap-2">
+                <button type="button" id="dashboard-rate-refresh" class="btn btn-sm btn-outline-primary">Actualizar tasa</button>
+                <a id="dashboard-rate-manage" href="/configuracion#tasa" class="btn btn-sm btn-outline-secondary">Gestionar tasa</a>
+              </div>
+            </div>
+          </section>
+
+          <section class="card shadow-sm" aria-labelledby="dashboard-debtors-title">
+            <div class="card-header bg-body d-flex flex-wrap align-items-center justify-content-between gap-2">
+              <h2 id="dashboard-debtors-title" class="h6 mb-0">Principales deudores</h2>
+              <a href="/clientes?deudores=1" class="small">Ver todos</a>
+            </div>
+            <div id="dashboard-debtors-empty" class="card-body text-center text-body-secondary d-none">
+              <p class="fw-semibold text-body mb-1">Nadie te debe</p>
+              <p class="small mb-0">Las ventas fiadas con saldo pendiente aparecerán aquí.</p>
+            </div>
+            <ul id="dashboard-debtors" class="list-group list-group-flush"></ul>
+          </section>
+        </div>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

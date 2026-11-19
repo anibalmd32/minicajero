@@ -1,0 +1,33 @@
+import { requireElement } from "../../dom";
+
+/** Elementos de la página de inicio, buscados una sola vez al cargar. */
+export const elements = {
+  loading: requireElement<HTMLElement>("dashboard-loading"),
+  loadError: requireElement<HTMLElement>("dashboard-error"),
+  loadErrorMessage: requireElement<HTMLElement>("dashboard-error-message"),
+  retryButton: requireElement<HTMLButtonElement>("dashboard-retry"),
+  reloadButton: requireElement<HTMLButtonElement>("dashboard-reload"),
+  content: requireElement<HTMLElement>("dashboard-content"),
+  dateLabel: requireElement<HTMLElement>("dashboard-date"),
+  setupCard: requireElement<HTMLElement>("dashboard-setup"),
+  setupRateAlert: requireElement<HTMLElement>("dashboard-setup-rate"),
+  setupSteps: requireElement<HTMLOListElement>("dashboard-steps"),
+  todayLink: requireElement<HTMLAnchorElement>("kpi-today-link"),
+  monthLink: requireElement<HTMLAnchorElement>("kpi-month-link"),
+  debtCard: requireElement<HTMLElement>("kpi-debt"),
+  stockCard: requireElement<HTMLElement>("kpi-stock"),
+  chart: requireElement<HTMLOListElement>("dashboard-chart"),
+  chartTotal: requireElement<HTMLElement>("dashboard-chart-total"),
+  chartEmpty: requireElement<HTMLElement>("dashboard-chart-empty"),
+  invoicesEmpty: requireElement<HTMLElement>("dashboard-invoices-empty"),
+  invoicesTable: requireElement<HTMLElement>("dashboard-invoices"),
+  invoicesBody: requireElement<HTMLTableSectionElement>("dashboard-invoices-body"),
+  rateBadge: requireElement<HTMLElement>("dashboard-rate-badge"),
+  rateValue: requireElement<HTMLElement>("dashboard-rate-value"),
+  rateMeta: requireElement<HTMLElement>("dashboard-rate-meta"),
+  rateDetail: requireElement<HTMLElement>("dashboard-rate-detail"),
+  rateRefreshButton: requireElement<HTMLButtonElement>("dashboard-rate-refresh"),
+  rateManageLink: requireElement<HTMLAnchorElement>("dashboard-rate-manage"),
+  debtorsEmpty: requireElement<HTMLElement>("dashboard-debtors-empty"),
+  debtorsList: requireElement<HTMLUListElement>("dashboard-debtors"),
+};
