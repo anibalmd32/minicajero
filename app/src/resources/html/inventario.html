@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Inventario · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <script type="module" src="../ui/pages/inventario/index.ts"></script>
+</head>
+<body>
+  <header id="app-nav"></header>
+  <main class="container py-4">
+    <div class="page-header">
+      <h1>Inventario</h1>
+      <button type="button" id="product-new" class="btn btn-primary">Nuevo producto</button>
+    </div>
+
+    <section class="card shadow-sm" aria-labelledby="products-title">
+      <h2 id="products-title" class="visually-hidden">Listado de productos</h2>
+      <div class="card-body border-bottom">
+        <form id="product-filters" class="list-toolbar" role="search" autocomplete="off">
+          <div class="list-search">
+            <label for="product-search" class="visually-hidden">Buscar productos</label>
+            <input type="search" class="form-control" id="product-search" name="q" maxlength="100"
+              placeholder="Código o nombre" aria-describedby="product-count">
+          </div>
+          <div class="btn-group btn-group-sm product-filter" role="group" aria-label="Filtrar productos">
+            <input type="radio" class="btn-check" name="filtro" id="product-filter-all" value="all" autocomplete="off" checked>
+            <label class="btn btn-outline-secondary" for="product-filter-all">Todos</label>
+            <input type="radio" class="btn-check" name="filtro" id="product-filter-low" value="low" autocomplete="off">
+            <label class="btn btn-outline-secondary" for="product-filter-low">Stock bajo</label>
+            <input type="radio" class="btn-check" name="filtro" id="product-filter-out" value="out" autocomplete="off">
+            <label class="btn btn-outline-secondary" for="product-filter-out">Sin stock</label>
+            <input type="radio" class="btn-check" name="filtro" id="product-filter-inactive" value="inactive" autocomplete="off">
+            <label class="btn btn-outline-secondary" for="product-filter-inactive">Inactivos</label>
+          </div>
+        </form>
+      </div>
+
+      <div id="products-loading" class="d-flex justify-content-center align-items-center gap-2 py-5 text-secondary" role="status">
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span>Cargando productos…</span>
+      </div>
+
+      <div id="products-error" class="card-body d-none">
+        <div class="alert alert-danger mb-0" role="alert">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <span>No se pudieron cargar los productos. <span id="products-error-message"></span></span>
+            <button type="button" id="products-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="products-empty" class="card-body empty-state d-none">
+        <p id="products-empty-title" class="empty-state-title"></p>
+        <p id="products-empty-text" class="mb-3"></p>
+        <button type="button" id="products-empty-action" class="btn btn-outline-primary"></button>
+      </div>
+
+      <div id="products-list" class="d-none">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 list-table products-table">
+            <thead>
+              <tr>
+                <th scope="col" class="d-none d-md-table-cell">Código</th>
+                <th scope="col">Nombre</th>
+                <th scope="col" class="d-none d-sm-table-cell">Precio</th>
+                <th scope="col" class="text-center">Stock</th>
+                <th scope="col" class="d-none d-sm-table-cell">Estado</th>
+                <th scope="col" class="text-end d-none d-lg-table-cell"><span class="visually-hidden">Acciones</span></th>
+              </tr>
+            </thead>
+            <tbody id="products-body"></tbody>
+          </table>
+        </div>
+        <nav class="card-footer bg-body d-flex flex-wrap align-items-center justify-content-between gap-2" aria-label="Paginación de productos">
+          <span class="small text-body-secondary" aria-live="polite">
+            <span id="product-count"></span><span id="product-threshold" class="d-block d-sm-inline"></span>
+          </span>
+          <div class="btn-group btn-group-sm">
+            <button type="button" id="products-prev" class="btn btn-outline-secondary">Anterior</button>
+            <button type="button" id="products-next" class="btn btn-outline-secondary">Siguiente</button>
+          </div>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal fade" id="product-modal" tabindex="-1" role="dialog" aria-labelledby="product-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="product-modal-title">Nuevo producto</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="product-form" autocomplete="off">
+            <div class="row g-3">
+              <div class="col-12">
+                <label for="product_name" class="form-label">Nombre <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" class="form-control" id="product_name" name="name" maxlength="120" required placeholder="Ej.: Harina de maíz 1 kg">
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="product_code" class="form-label">Código <span class="text-body-secondary small">(opcional)</span></label>
+                <input type="text" class="form-control product-code-input" id="product_code" name="code" maxlength="64"
+                  placeholder="Ej.: HAR-001" aria-describedby="product_code_help" autocapitalize="characters" spellcheck="false">
+                <div id="product_code_help" class="form-text">Escríbelo o escanéalo con el teléfono.</div>
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="product_price" class="form-label">Precio <span class="text-danger" aria-hidden="true">*</span></label>
+                <div class="input-group">
+                  <span class="input-group-text">$</span>
+                  <input type="text" class="form-control text-end" id="product_price" name="price_usd" inputmode="decimal" maxlength="12"
+                    required placeholder="0,00" aria-describedby="product_price_preview">
+                </div>
+                <div id="product_price_preview" class="form-text product-price-preview" aria-live="polite"></div>
+              </div>
+              <div class="col-12 col-sm-6" id="product_stock_group">
+                <label for="product_stock" class="form-label">Stock inicial</label>
+                <div class="input-group">
+                  <input type="text" class="form-control text-end" id="product_stock" name="stock" inputmode="numeric" maxlength="13"
+                    placeholder="0" aria-describedby="product_stock_help">
+                  <span class="input-group-text">unid.</span>
+                </div>
+                <div id="product_stock_help" class="form-text">Unidades disponibles hoy. Luego se cambia con «Ajustar stock».</div>
+              </div>
+              <div class="col-12 col-sm-6" id="product_stock_current">
+                <span class="form-label d-block">Stock actual</span>
+                <p class="mb-0"><span id="product_stock_value" class="fw-semibold"></span></p>
+                <div class="form-text">Para cambiarlo usa «Ajustar stock» y queda registrado en el historial.</div>
+              </div>
+              <div class="col-12 col-sm-6 d-flex align-items-sm-center">
+                <div class="form-check form-switch mb-0">
+                  <input class="form-check-input" type="checkbox" role="switch" id="product_active" name="active" value="1" checked aria-describedby="product_active_help">
+                  <label class="form-check-label" for="product_active">Activo</label>
+                  <div id="product_active_help" class="form-text mt-0">Los inactivos no aparecen en nuevas ventas.</div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="product-save" form="product-form">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="stock-modal" tabindex="-1" role="dialog" aria-labelledby="stock-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="stock-modal-title">Ajustar stock</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p class="mb-3">
+            <span id="stock-product-name" class="fw-semibold text-break"></span><br>
+            <span class="text-body-secondary">Stock actual: <span id="stock-current" class="fw-semibold text-body"></span></span>
+          </p>
+          <form id="stock-form" autocomplete="off">
+            <fieldset class="mb-3">
+              <legend class="form-label fs-6 mb-2">Operación</legend>
+              <div class="btn-group w-100" role="group">
+                <input type="radio" class="btn-check" name="mode" id="stock_mode_add" value="add" autocomplete="off" checked>
+                <label class="btn btn-outline-success" for="stock_mode_add">Sumar</label>
+                <input type="radio" class="btn-check" name="mode" id="stock_mode_remove" value="remove" autocomplete="off">
+                <label class="btn btn-outline-danger" for="stock_mode_remove">Restar</label>
+                <input type="radio" class="btn-check" name="mode" id="stock_mode_set" value="set" autocomplete="off">
+                <label class="btn btn-outline-primary" for="stock_mode_set">Fijar</label>
+              </div>
+            </fieldset>
+            <div class="mb-3">
+              <label for="stock_quantity" id="stock_quantity_label" class="form-label">Cantidad a sumar</label>
+              <div class="input-group">
+                <input type="text" class="form-control text-end" id="stock_quantity" name="quantity" inputmode="numeric" maxlength="13"
+                  required placeholder="0" aria-describedby="stock_result">
+                <span class="input-group-text">unid.</span>
+              </div>
+              <div id="stock_result" class="form-text" aria-live="polite"></div>
+            </div>
+            <div>
+              <label for="stock_reason" class="form-label">Motivo <span class="text-body-secondary small">(opcional)</span></label>
+              <input type="text" class="form-control" id="stock_reason" name="reason" maxlength="200" placeholder="Ej.: Compra a proveedor, merma, conteo físico">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="stock-save" form="stock-form">Guardar ajuste</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
