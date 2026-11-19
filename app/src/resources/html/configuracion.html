@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Configuración · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <script type="module" src="../ui/pages/configuracion.ts"></script>
+</head>
+<body>
+  <header id="app-nav"></header>
+  <main class="container py-4">
+    <div class="page-header">
+      <h1>Configuración</h1>
+    </div>
+
+    <div id="settings-loading" role="status">
+      <div class="d-flex justify-content-center align-items-center gap-2 py-5 text-secondary">
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span>Cargando configuración…</span>
+      </div>
+    </div>
+
+    <div id="settings-load-error" class="alert alert-danger d-none" role="alert">
+      <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <span>No se pudo cargar la configuración. <span id="settings-load-error-message"></span></span>
+        <button type="button" id="settings-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+      </div>
+    </div>
+
+    <form id="settings-form" class="d-none" autocomplete="off">
+      <div class="row g-4">
+        <div class="col-12 col-lg-6">
+          <section class="card shadow-sm h-100" aria-labelledby="business-card-title">
+            <div class="card-header bg-body">
+              <h2 id="business-card-title" class="h6 mb-0">Datos del negocio</h2>
+            </div>
+            <div class="card-body">
+              <p class="form-text mt-0 mb-3">Aparecen en el encabezado de las facturas impresas.</p>
+              <div class="row g-3">
+                <div class="col-12">
+                  <label for="business_name" class="form-label">Nombre del negocio <span class="text-danger" aria-hidden="true">*</span></label>
+                  <input type="text" class="form-control" id="business_name" name="business_name" maxlength="120" required placeholder="Ej.: Bodega La Esquina">
+                </div>
+                <div class="col-12 col-sm-6">
+                  <label for="business_rif" class="form-label">RIF</label>
+                  <input type="text" class="form-control text-uppercase" id="business_rif" name="business_rif" maxlength="20" placeholder="J-12345678-9">
+                </div>
+                <div class="col-12 col-sm-6">
+                  <label for="business_phone" class="form-label">Teléfono</label>
+                  <input type="tel" class="form-control" id="business_phone" name="business_phone" maxlength="20" inputmode="tel" placeholder="0412-1234567">
+                </div>
+                <div class="col-12">
+                  <label for="business_address" class="form-label">Dirección</label>
+                  <textarea class="form-control" id="business_address" name="business_address" rows="3" maxlength="250" placeholder="Calle, sector, ciudad"></textarea>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+
+        <div class="col-12 col-lg-6 d-flex flex-column gap-4">
+          <section class="card shadow-sm" aria-labelledby="tax-card-title">
+            <div class="card-header bg-body">
+              <h2 id="tax-card-title" class="h6 mb-0">Impuestos</h2>
+            </div>
+            <div class="card-body">
+              <label for="iva_percent" class="form-label">IVA <span class="text-danger" aria-hidden="true">*</span></label>
+              <div class="input-group settings-iva">
+                <input type="text" class="form-control text-end" id="iva_percent" name="iva_percent" inputmode="decimal" maxlength="6" required aria-describedby="iva_percent_help">
+                <span class="input-group-text">%</span>
+              </div>
+              <div id="iva_percent_help" class="form-text">Se aplica sobre el subtotal de cada venta. Usa 0 si no cobras IVA. Hasta 2 decimales.</div>
+            </div>
+          </section>
+
+          <section class="card shadow-sm flex-grow-1" aria-labelledby="prefs-card-title">
+            <div class="card-header bg-body">
+              <h2 id="prefs-card-title" class="h6 mb-0">Preferencias</h2>
+            </div>
+            <div class="card-body">
+              <fieldset aria-describedby="display_currency_help">
+                <legend class="form-label fs-6 mb-2">Moneda principal en pantalla</legend>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="display_currency" id="display_currency_usd" value="USD">
+                  <label class="form-check-label" for="display_currency_usd">Dólares (USD) <span class="amount-secondary">Ej.: $ 10,00 (Bs …)</span></label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="display_currency" id="display_currency_ves" value="VES">
+                  <label class="form-check-label" for="display_currency_ves">Bolívares (Bs) <span class="amount-secondary">Ej.: Bs … ($ 10,00)</span></label>
+                </div>
+              </fieldset>
+              <div id="display_currency_help" class="form-text">Siempre se muestran ambos montos; esto solo elige cuál aparece primero. Los precios se guardan en dólares.</div>
+            </div>
+          </section>
+        </div>
+      </div>
+
+      <div class="d-grid d-sm-flex justify-content-sm-end mt-4">
+        <button type="submit" class="btn btn-primary px-4">Guardar cambios</button>
+      </div>
+    </form>
+
+    <section id="tasa" class="card shadow-sm mt-4 rate-section" aria-labelledby="rate-card-title">
+      <div class="card-header bg-body d-flex flex-wrap align-items-center justify-content-between gap-2">
+        <h2 id="rate-card-title" class="h6 mb-0">Tasa de cambio</h2>
+        <span id="rate-status-badge" class="badge rounded-pill text-bg-secondary text-wrap text-start">Consultando tasa…</span>
+      </div>
+      <div class="card-body">
+        <div class="row g-4">
+          <div class="col-12 col-md-6">
+            <div class="small text-body-secondary">Tasa vigente (Bs por USD)</div>
+            <div id="rate-current-value" class="fs-2 fw-semibold rate-current-value">—</div>
+            <div id="rate-current-meta" class="small text-body-secondary"></div>
+            <div id="rate-status-detail" class="small mt-2"></div>
+            <div class="d-flex flex-wrap gap-2 mt-3">
+              <button type="button" id="rate-refresh" class="btn btn-outline-primary">Actualizar ahora</button>
+              <button type="button" id="rate-auto" class="btn btn-outline-secondary d-none">Volver a automática</button>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <form id="rate-manual-form" autocomplete="off">
+              <label for="rate_manual" class="form-label">Fijar tasa manual</label>
+              <div class="input-group rate-manual-group">
+                <span class="input-group-text">Bs</span>
+                <input type="text" class="form-control text-end" id="rate_manual" name="rate" inputmode="decimal" maxlength="16" required placeholder="Ej.: 1.050,25" aria-describedby="rate_manual_help">
+                <button type="submit" class="btn btn-primary">Fijar tasa</button>
+              </div>
+              <div id="rate_manual_help" class="form-text">Bolívares por cada dólar, con coma decimal (hasta 4 decimales). Se usará en ventas y abonos hasta que vuelvas a la tasa automática.</div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="card-body border-top">
+        <h3 class="h6 mb-3">Historial de tasas</h3>
+        <div id="rate-history-loading" class="d-flex align-items-center gap-2 py-3 text-secondary" role="status">
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          <span>Cargando historial…</span>
+        </div>
+        <div id="rate-history-error" class="alert alert-danger d-none mb-0" role="alert">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <span>No se pudo cargar el historial. <span id="rate-history-error-message"></span></span>
+            <button type="button" id="rate-history-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+          </div>
+        </div>
+        <div id="rate-history-empty" class="empty-state py-4 d-none">
+          <p class="empty-state-title">Aún no hay tasas registradas</p>
+          <p class="mb-0">Cuando se obtenga la tasa oficial o fijes una tasa manual aparecerá aquí.</p>
+        </div>
+        <div id="rate-history" class="d-none">
+          <div class="table-responsive">
+            <table class="table table-sm table-hover align-middle mb-0">
+              <thead>
+                <tr>
+                  <th scope="col">Registrada</th>
+                  <th scope="col">Tasa (Bs/$)</th>
+                  <th scope="col">Origen</th>
+                  <th scope="col" class="d-none d-md-table-cell">Fecha oficial</th>
+                  <th scope="col" class="d-none d-lg-table-cell">Última comprobación</th>
+                </tr>
+              </thead>
+              <tbody id="rate-history-body"></tbody>
+            </table>
+          </div>
+          <nav class="d-flex flex-wrap align-items-center justify-content-between gap-2 mt-3" aria-label="Paginación del historial de tasas">
+            <span id="rate-history-range" class="small text-body-secondary"></span>
+            <div class="btn-group btn-group-sm">
+              <button type="button" id="rate-history-prev" class="btn btn-outline-secondary">Anterior</button>
+              <button type="button" id="rate-history-next" class="btn btn-outline-secondary">Siguiente</button>
+            </div>
+          </nav>
+        </div>
+      </div>
+    </section>
+
+    <section id="respaldo" class="card shadow-sm mt-4" aria-labelledby="backup-card-title">
+      <div class="card-header bg-body">
+        <h2 id="backup-card-title" class="h6 mb-0">Respaldo</h2>
+      </div>
+      <div class="card-body">
+        <div class="row g-4">
+          <div class="col-12 col-md-6">
+            <h3 class="h6">Descargar respaldo</h3>
+            <p class="small text-body-secondary">Guarda una copia completa de tus ventas, clientes, inventario y configuración en un archivo <code>.db</code>. Guárdala fuera de este equipo (pendrive, correo o nube).</p>
+            <button type="button" id="backup-download" class="btn btn-primary">Descargar respaldo</button>
+          </div>
+          <div class="col-12 col-md-6">
+            <h3 class="h6">Restaurar desde archivo</h3>
+            <p class="small text-body-secondary">Reemplaza todos los datos actuales por los de un respaldo. Antes se guarda automáticamente una copia de los datos actuales.</p>
+            <button type="button" id="backup-restore-open" class="btn btn-outline-danger">Restaurar desde archivo…</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body border-top">
+        <h3 class="h6 mb-1">Respaldos automáticos</h3>
+        <p class="small text-body-secondary mb-3">Se hace uno al día al usar la aplicación y se conservan los <span id="backup-retention">14</span> más recientes.<span id="backup-directory-row" class="d-block d-none">Carpeta: <code id="backup-directory" class="app-path"></code></span></p>
+        <div id="backup-list-loading" class="d-flex align-items-center gap-2 py-3 text-secondary" role="status">
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          <span>Cargando respaldos…</span>
+        </div>
+        <div id="backup-list-error" class="alert alert-danger d-none mb-0" role="alert">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <span>No se pudieron cargar los respaldos. <span id="backup-list-error-message"></span></span>
+            <button type="button" id="backup-list-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+          </div>
+        </div>
+        <div id="backup-list-empty" class="empty-state py-4 d-none">
+          <p class="empty-state-title">Aún no hay respaldos automáticos</p>
+          <p class="mb-0">El primero se guarda al iniciar la aplicación. Mientras tanto, puedes descargar un respaldo manual.</p>
+        </div>
+        <div id="backup-list" class="table-responsive d-none">
+          <table class="table table-sm table-hover align-middle mb-0">
+            <thead>
+              <tr>
+                <th scope="col">Fecha</th>
+                <th scope="col" class="text-end d-none d-sm-table-cell">Tamaño</th>
+                <th scope="col" class="text-end"><span class="visually-hidden">Acciones</span></th>
+              </tr>
+            </thead>
+            <tbody id="backup-list-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <section id="acceso" class="card shadow-sm mt-4" aria-labelledby="access-card-title">
+      <div class="card-header bg-body">
+        <h2 id="access-card-title" class="h6 mb-0">Acceso</h2>
+      </div>
+      <div class="card-body">
+        <div class="row g-4">
+          <div class="col-12 col-md-7">
+            <h3 class="h6">Cambiar la contraseña</h3>
+            <p class="small text-body-secondary">El usuario no se cambia: es <strong id="access-username">—</strong>.</p>
+            <form id="password-form" autocomplete="off">
+              <div class="mb-3">
+                <label for="password_current" class="form-label">Contraseña actual</label>
+                <input type="password" class="form-control" id="password_current" name="current_password" maxlength="64" required>
+              </div>
+              <div class="mb-3">
+                <label for="password_new" class="form-label">Contraseña nueva</label>
+                <input type="password" class="form-control" id="password_new" name="new_password" minlength="4" maxlength="64" required
+                  aria-describedby="password_new_help">
+                <div id="password_new_help" class="form-text">Mínimo 4 caracteres.</div>
+              </div>
+              <div class="mb-3">
+                <label for="password_confirm" class="form-label">Repite la contraseña nueva</label>
+                <input type="password" class="form-control" id="password_confirm" name="confirm_password" minlength="4" maxlength="64" required>
+              </div>
+              <button type="submit" class="btn btn-primary">Guardar contraseña</button>
+            </form>
+          </div>
+          <div class="col-12 col-md-5">
+            <h3 class="h6">Cerrar sesión</h3>
+            <p class="small text-body-secondary">Sale de MiniCajero en este equipo. Tendrás que entrar otra vez con tu usuario y tu contraseña.</p>
+            <button type="button" id="access-logout" class="btn btn-outline-secondary">Cerrar sesión</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="aplicacion" class="card shadow-sm mt-4" aria-labelledby="app-card-title">
+      <div class="card-header bg-body">
+        <h2 id="app-card-title" class="h6 mb-0">Aplicación</h2>
+      </div>
+      <div class="card-body">
+        <div id="app-info-loading" class="d-flex align-items-center gap-2 text-secondary" role="status">
+          <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+          <span>Cargando datos de la aplicación…</span>
+        </div>
+        <div id="app-info-error" class="alert alert-danger d-none mb-0" role="alert">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <span>No se pudieron cargar los datos de la aplicación. <span id="app-info-error-message"></span></span>
+            <button type="button" id="app-info-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+          </div>
+          <button type="button" id="app-shutdown-error" class="btn btn-sm btn-outline-danger mt-3">Cerrar la aplicación</button>
+        </div>
+        <div id="app-info" class="row g-4 d-none">
+          <div class="col-12 col-md-7">
+            <dl class="app-info-list mb-0">
+              <div><dt>Versión</dt><dd id="app-version"></dd></div>
+              <div><dt>Carpeta de datos</dt><dd><code id="app-data-dir" class="app-path"></code></dd></div>
+              <div id="app-log-row"><dt>Registro de actividad</dt><dd><code id="app-log-path" class="app-path"></code></dd></div>
+            </dl>
+            <p class="form-text mb-0 mt-2">Desde «Respaldo» puedes descargar una copia de tus datos o restaurarla.</p>
+          </div>
+          <div class="col-12 col-md-5">
+            <h3 class="h6">Cerrar aplicación</h3>
+            <p class="small text-body-secondary">Detiene MiniCajero en este equipo. Lo que ya guardaste no se pierde; podrás volver a abrirlo cuando quieras.</p>
+            <button type="button" id="app-shutdown" class="btn btn-outline-danger">Cerrar aplicación</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal fade" id="restore-modal" tabindex="-1" role="dialog" aria-labelledby="restore-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="restore-modal-title">Restaurar respaldo</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="restore-form" autocomplete="off">
+            <div class="alert alert-danger" role="alert">
+              <p class="fw-semibold mb-2">Esta acción reemplaza todos los datos actuales.</p>
+              <ul class="mb-0 ps-3 small">
+                <li>Las ventas, facturas, abonos, clientes, inventario, tasas y configuración pasarán a ser los del archivo.</li>
+                <li>Lo registrado después de ese respaldo dejará de verse.</li>
+                <li>Antes de reemplazar se guarda un respaldo de los datos actuales en «Respaldos automáticos», por si necesitas volver atrás.</li>
+              </ul>
+            </div>
+            <div class="mb-3">
+              <label for="restore_file" class="form-label">Archivo de respaldo <span class="text-danger" aria-hidden="true">*</span></label>
+              <input type="file" class="form-control" id="restore_file" name="file" accept=".db,.sqlite,.sqlite3,application/vnd.sqlite3" required aria-describedby="restore_file_help">
+              <div id="restore_file_help" class="form-text">Un archivo <code>.db</code> descargado desde MiniCajero.</div>
+            </div>
+            <div>
+              <label for="restore_confirm" class="form-label">Para confirmar, escribe <strong>RESTAURAR</strong></label>
+              <input type="text" class="form-control" id="restore_confirm" name="confirm" autocomplete="off" autocapitalize="characters" spellcheck="false" required>
+            </div>
+          </form>
+          <div id="restore-done" class="d-none text-center py-4" role="status">
+            <div class="spinner-border text-success mb-3" aria-hidden="true"></div>
+            <p class="fw-semibold mb-1">Datos restaurados</p>
+            <p class="text-body-secondary mb-0">Recargando la aplicación…</p>
+          </div>
+        </div>
+        <div class="modal-footer" id="restore-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-danger" id="restore-submit" form="restore-form" disabled>Reemplazar todos los datos</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
