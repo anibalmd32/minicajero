@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Acceso · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <script type="module" src="../ui/pages/login.ts"></script>
+</head>
+<body class="login-page">
+  <main class="login-main">
+    <div class="login-card">
+      <div class="login-brand">
+        <img src="../../../assets/minicajero.svg" alt="" width="48" height="48">
+        <h1 class="login-title">MiniCajero</h1>
+      </div>
+
+      <div id="login-loading" class="d-flex justify-content-center align-items-center gap-2 py-4 text-secondary" role="status">
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span>Comprobando el acceso…</span>
+      </div>
+
+      <div id="login-error" class="alert alert-danger d-none" role="alert">
+        <span id="login-error-message"></span>
+      </div>
+
+      <section id="login-setup" class="d-none" aria-labelledby="login-setup-title">
+        <h2 id="login-setup-title" class="h5 mb-1">Primera vez</h2>
+        <p class="text-body-secondary mb-4">Crea el usuario y la contraseña con los que vas a entrar siempre a MiniCajero.</p>
+        <form id="setup-form" autocomplete="off">
+          <div class="mb-3">
+            <label for="setup-username" class="form-label">Usuario</label>
+            <input type="text" class="form-control" id="setup-username" name="username" maxlength="40" required
+              autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="setup-username-help">
+            <div id="setup-username-help" class="form-text">Una sola palabra, sin espacios.</div>
+          </div>
+          <div class="mb-3">
+            <label for="setup-password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="setup-password" name="password" minlength="4" maxlength="64" required
+              aria-describedby="setup-password-help">
+            <div id="setup-password-help" class="form-text">Mínimo 4 caracteres.</div>
+          </div>
+          <div class="mb-4">
+            <label for="setup-password-confirm" class="form-label">Repite la contraseña</label>
+            <input type="password" class="form-control" id="setup-password-confirm" name="password_confirm" minlength="4" maxlength="64" required>
+          </div>
+          <button type="submit" class="btn btn-accent w-100">Crear usuario y entrar</button>
+        </form>
+      </section>
+
+      <section id="login-signin" class="d-none" aria-labelledby="login-signin-title">
+        <h2 id="login-signin-title" class="h5 mb-4">Entrar a MiniCajero</h2>
+        <form id="login-form" autocomplete="off">
+          <div class="mb-3">
+            <label for="login-username" class="form-label">Usuario</label>
+            <input type="text" class="form-control" id="login-username" name="username" maxlength="40" required
+              autocapitalize="none" autocorrect="off" spellcheck="false">
+          </div>
+          <div class="mb-4">
+            <label for="login-password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="login-password" name="password" maxlength="64" required>
+          </div>
+          <button type="submit" class="btn btn-accent w-100">Entrar</button>
+        </form>
+        <button type="button" id="login-forgot" class="btn btn-link w-100 mt-3">Olvidé mi usuario o mi contraseña</button>
+      </section>
+
+      <section id="login-reset" class="d-none" aria-labelledby="login-reset-title">
+        <h2 id="login-reset-title" class="h5 mb-1">Recuperar el acceso</h2>
+        <p class="text-body-secondary mb-4">Escribe la clave de reinicio que te dio quien instaló la aplicación y crea un usuario y una contraseña nuevos.</p>
+        <form id="reset-form" autocomplete="off">
+          <div class="mb-3">
+            <label for="reset-key" class="form-label">Clave de reinicio</label>
+            <input type="password" class="form-control" id="reset-key" name="master_key" inputmode="numeric" maxlength="12" required
+              aria-describedby="reset-key-help">
+            <div id="reset-key-help" class="form-text">Solo números.</div>
+          </div>
+          <div class="mb-3">
+            <label for="reset-username" class="form-label">Usuario nuevo</label>
+            <input type="text" class="form-control" id="reset-username" name="username" maxlength="40" required
+              autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="reset-username-help">
+            <div id="reset-username-help" class="form-text">Una sola palabra, sin espacios.</div>
+          </div>
+          <div class="mb-3">
+            <label for="reset-password" class="form-label">Contraseña nueva</label>
+            <input type="password" class="form-control" id="reset-password" name="password" minlength="4" maxlength="64" required
+              aria-describedby="reset-password-help">
+            <div id="reset-password-help" class="form-text">Mínimo 4 caracteres.</div>
+          </div>
+          <div class="mb-4">
+            <label for="reset-password-confirm" class="form-label">Repite la contraseña</label>
+            <input type="password" class="form-control" id="reset-password-confirm" name="password_confirm" minlength="4" maxlength="64" required>
+          </div>
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-accent">Crear usuario nuevo y entrar</button>
+            <button type="button" id="reset-back" class="btn btn-outline-secondary">Volver a entrar</button>
+          </div>
+        </form>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
