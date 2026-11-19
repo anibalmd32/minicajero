@@ -1,0 +1,71 @@
+.pagination {
+  --bs-pagination-color: var(--mc-sky-dark);
+  --bs-pagination-hover-color: #1b4d75;
+  --bs-pagination-focus-color: #1b4d75;
+  --bs-pagination-focus-box-shadow: 0 0 0 0.25rem var(--bs-focus-ring-color);
+  --bs-pagination-active-bg: var(--mc-ink);
+  --bs-pagination-active-border-color: var(--mc-ink);
+}
+
+.list-group {
+  --bs-list-group-active-bg: var(--mc-ink);
+  --bs-list-group-active-border-color: var(--mc-ink);
+}
+
+.card {
+  --bs-card-border-color: var(--mc-line);
+  --bs-card-cap-bg: #fff;
+  --bs-card-border-radius: var(--bs-border-radius-lg);
+  --bs-card-inner-border-radius: calc(var(--bs-border-radius-lg) - 1px);
+}
+
+.card.shadow-sm,
+.card.shadow {
+  box-shadow: none !important;
+}
+
+.card-header {
+  font-weight: 700;
+}
+
+.modal {
+  --bs-modal-border-radius: var(--bs-border-radius-lg);
+  --bs-modal-header-border-color: var(--mc-line);
+  --bs-modal-footer-border-color: var(--mc-line);
+}
+
+.modal-title {
+  font-weight: 700;
+}
+
+.table {
+  --bs-table-hover-bg: rgba(var(--mc-sky-rgb), 0.06);
+  --bs-table-striped-bg: rgba(var(--mc-ink-rgb), 0.025);
+  --bs-table-border-color: var(--mc-line);
+}
+
+.table > thead > tr > th {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mc-ink-soft);
+  background-color: transparent;
+  border-bottom: 2px solid var(--mc-line);
+  white-space: nowrap;
+}
+
+.table > tbody > tr:last-child > * {
+  border-bottom-color: transparent;
+}
+
+.toast {
+  --bs-toast-border-radius: var(--bs-border-radius-lg);
+}
+
+a:focus-visible,
+.btn:focus-visible,
+.nav-link:focus-visible,
+.form-check-input:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid var(--mc-sky);
+  outline-offset: 2px;
+}

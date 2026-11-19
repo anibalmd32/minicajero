@@ -1,0 +1,6 @@
+@import "./styles/theme/01-tokens.css";
+@import "./styles/theme/02-typography.css";
+@import "./styles/theme/03-buttons.css";
+@import "./styles/theme/04-badges-and-forms.css";
+@import "./styles/theme/05-components.css";
+@import "./styles/theme/06-navbar-and-code.css";

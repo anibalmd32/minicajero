@@ -1,0 +1,71 @@
+.phone-help {
+  margin-top: 1rem;
+  border-top: 1px solid var(--mc-line);
+  padding-top: 0.75rem;
+}
+
+.phone-help > summary {
+  width: fit-content;
+  font-weight: 600;
+  color: var(--bs-link-color);
+  cursor: pointer;
+}
+
+.phone-help > summary:focus-visible {
+  outline: 2px solid var(--mc-sky);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+.phone-help-note {
+  margin: 0.75rem 0 1rem;
+  font-size: 0.875rem;
+  color: var(--bs-secondary-color);
+}
+
+.phone-help-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.phone-help-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 0;
+  margin: 0;
+}
+
+.phone-help-step figcaption {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-align: center;
+}
+
+.phone-mock {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.375rem;
+  width: 100%;
+  max-width: 8.5rem;
+  aspect-ratio: 9 / 16;
+  padding: 0.75rem 0.5rem;
+  overflow: hidden;
+  font-size: 0.625rem;
+  line-height: 1.25;
+  text-align: center;
+  background-color: #fff;
+  border: 5px solid var(--mc-ink);
+  border-radius: 1rem;
+}
+
+.phone-mock .is-target {
+  box-shadow:
+    0 0 0 2px var(--mc-yellow),
+    0 0 0 4px var(--mc-ink);
+}

@@ -1,0 +1,22 @@
+.statement-items .col-date {
+  width: 6.5rem;
+  font-size: 0.9em;
+}
+
+.statement-items .col-money,
+.statement-items .col-balance {
+  width: 8.5rem;
+  text-align: end;
+}
+
+.statement-items td.col-balance > span {
+  font-weight: 600;
+}
+
+.statement-row-void td {
+  color: #6c757d;
+}
+
+.statement-row-void .col-money {
+  text-decoration: line-through;
+}

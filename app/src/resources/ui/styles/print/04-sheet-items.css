@@ -1,0 +1,80 @@
+.sheet-items {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-collapse: collapse;
+}
+
+.sheet-items thead {
+  display: table-header-group;
+}
+
+.sheet-items tr {
+  break-inside: avoid;
+}
+
+.sheet-items th {
+  padding: 0.375rem 0.5rem;
+  font-size: 0.85em;
+  font-weight: 600;
+  text-align: start;
+  border-bottom: 1.5px solid #212529;
+}
+
+.sheet-items td {
+  padding: 0.375rem 0.5rem;
+  vertical-align: top;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.sheet-items th:first-child,
+.sheet-items td:first-child {
+  padding-left: 0;
+}
+
+.sheet-items th:last-child,
+.sheet-items td:last-child {
+  padding-right: 0;
+}
+
+.sheet-items .col-qty {
+  width: 3.5rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.sheet-items .col-desc {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.sheet-items .col-unit,
+.sheet-items .col-amount {
+  width: 9rem;
+  text-align: end;
+}
+
+.sheet-item-name,
+.sheet-item-code,
+.sheet-item-unit {
+  display: block;
+}
+
+.sheet-item-code,
+.sheet-item-unit {
+  font-size: 0.85em;
+  color: #6c757d;
+}
+
+.sheet-item-unit {
+  display: none;
+}
+
+.invoice-sheet small {
+  display: block;
+  font-size: 0.85em;
+  color: #6c757d !important;
+}
+
+.sheet-item-unit small {
+  display: inline;
+}

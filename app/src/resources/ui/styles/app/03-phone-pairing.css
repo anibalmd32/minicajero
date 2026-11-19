@@ -1,0 +1,67 @@
+.phone-modal-dialog {
+  max-width: 40rem;
+}
+.phone-pair {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem 1.5rem;
+}
+
+.phone-qr-column {
+  flex: 0 1 15rem;
+  min-width: 0;
+  margin-inline: auto;
+}
+
+.phone-qr {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 1;
+  width: 100%;
+  max-width: 15rem;
+  margin-inline: auto;
+  padding: 0.5rem;
+  background-color: #fff;
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-lg);
+}
+
+.phone-qr svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.phone-networks {
+  margin-top: 0.75rem;
+}
+
+.phone-steps {
+  flex: 1 1 14rem;
+  min-width: 0;
+  margin-bottom: 0;
+  padding-left: 1.25rem;
+}
+
+.phone-steps li + li {
+  margin-top: 0.75rem;
+}
+
+.phone-pair-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.5rem;
+  margin: 1rem 0 0;
+  text-align: center;
+}
+
+.phone-pair-status:empty {
+  display: none;
+}
+
+.phone-list-section {
+  margin-top: 1.25rem;
+}

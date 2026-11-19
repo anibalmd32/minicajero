@@ -1,0 +1,109 @@
+.pos-line {
+  border-left: 3px solid transparent;
+}
+
+.pos-line-error {
+  border-left-color: var(--bs-danger);
+  background-color: var(--bs-danger-bg-subtle);
+}
+
+.pos-line-flash {
+  animation: pos-line-flash 1.2s ease-out;
+}
+
+@keyframes pos-line-flash {
+  from {
+    background-color: var(--bs-success-bg-subtle);
+  }
+
+  to {
+    background-color: transparent;
+  }
+}
+
+.pos-line {
+  padding-top: 0.625rem;
+  padding-bottom: 0.625rem;
+}
+
+.pos-line-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(4.75rem, auto);
+  grid-template-areas:
+    "name qty total"
+    "unit remove total";
+  align-items: center;
+  gap: 0.125rem 0.75rem;
+}
+
+.pos-line-name {
+  grid-area: name;
+  min-width: 0;
+  font-weight: 600;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.pos-line-unit {
+  grid-area: unit;
+  min-width: 0;
+  align-self: start;
+  font-size: 0.8125rem;
+  color: var(--bs-secondary-color);
+  overflow-wrap: anywhere;
+}
+
+.pos-line-maxed {
+  font-weight: 600;
+  color: var(--bs-warning-text-emphasis);
+}
+
+.pos-line-remove {
+  grid-area: remove;
+  justify-self: center;
+  align-self: start;
+  padding: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--bs-danger-text-emphasis);
+  background: none;
+  border: 0;
+}
+
+.pos-line-remove:hover {
+  text-decoration: underline;
+}
+
+.pos-line-remove:focus-visible {
+  outline: 2px solid var(--mc-sky);
+  outline-offset: 2px;
+  border-radius: var(--bs-border-radius-sm);
+}
+
+.pos-qty {
+  grid-area: qty;
+  flex: 0 0 auto;
+  flex-wrap: nowrap;
+  width: 7.25rem;
+}
+
+.pos-qty .btn {
+  min-width: 2.25rem;
+  font-weight: 600;
+}
+
+.pos-qty .form-control {
+  font-variant-numeric: tabular-nums;
+}
+
+.pos-line-total {
+  grid-area: total;
+  min-width: 0;
+  font-weight: 700;
+  text-align: end;
+}
+
+.pos-line-total small {
+  display: block;
+  font-weight: 400;
+}

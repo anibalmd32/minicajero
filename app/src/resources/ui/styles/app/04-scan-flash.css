@@ -1,0 +1,24 @@
+.scan-flash {
+  animation: scan-flash 2.4s ease-out;
+}
+
+tr.scan-flash {
+  animation: none;
+}
+
+tr.scan-flash > td {
+  animation: scan-flash-cell 2.4s ease-out;
+}
+
+@keyframes scan-flash {
+  from {
+    background-color: var(--bs-warning-bg-subtle);
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-warning-rgb), 0.45);
+  }
+}
+
+@keyframes scan-flash-cell {
+  from {
+    box-shadow: inset 0 0 0 9999px var(--bs-warning-bg-subtle);
+  }
+}

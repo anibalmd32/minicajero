@@ -1,0 +1,142 @@
+.invoice-filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.invoice-status-filter {
+  flex-wrap: nowrap;
+}
+
+.invoice-dates {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 0.5rem 0.75rem;
+}
+
+.invoice-date-field {
+  flex: 1 1 9rem;
+  min-width: 0;
+  max-width: 11rem;
+}
+
+.invoice-date-shortcuts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.invoice-customer-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  max-width: 100%;
+  padding: 0.375rem 0.5rem 0.375rem 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.invoice-customer-chip .btn-close {
+  flex-shrink: 0;
+  font-size: 0.625rem;
+}
+
+.invoice-totals {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.5rem 1.5rem;
+  margin: 0;
+  padding: 0.75rem 1rem;
+  background-color: var(--bs-tertiary-bg);
+}
+
+.invoice-totals dt {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--bs-secondary-color);
+}
+
+.invoice-totals dd {
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.invoice-row {
+  cursor: pointer;
+}
+
+.invoice-row-void > td {
+  color: var(--bs-secondary-color);
+  background-color: var(--bs-tertiary-bg);
+}
+
+.invoice-row-void .invoice-number {
+  color: var(--bs-secondary-color);
+}
+
+.invoice-customer-cell {
+  overflow-wrap: anywhere;
+}
+
+@media (min-width: 576px) {
+  .invoice-customer-cell {
+    min-width: 8rem;
+  }
+}
+
+.invoice-meta-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.75rem;
+}
+
+.invoice-meta-inline:empty {
+  display: none;
+}
+
+.invoice-items-table td.amount-cell small {
+  display: block;
+}
+
+.invoice-payments {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--bs-border-color);
+}
+
+.invoice-is-void .modal-header {
+  background-color: var(--bs-secondary-bg-subtle);
+}
+
+@media (max-width: 575.98px) {
+  .invoice-status-filter {
+    width: 100%;
+  }
+
+  .invoice-status-filter .btn {
+    flex: 1 1 0;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    white-space: nowrap;
+  }
+
+  .invoice-date-field {
+    max-width: none;
+  }
+
+  .invoices-table > :not(caption) > * > * {
+    padding-left: 0.375rem;
+    padding-right: 0.375rem;
+  }
+
+  .invoices-table .amount-cell {
+    font-size: 0.875rem;
+  }
+
+  .invoice-totals dd .amount-cell small,
+  .invoice-totals dd small {
+    display: block;
+  }
+}

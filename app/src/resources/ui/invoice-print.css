@@ -1,0 +1,9 @@
+@import "./styles/print/01-toolbar.css";
+@import "./styles/print/02-sheet-base.css";
+@import "./styles/print/03-sheet-header.css";
+@import "./styles/print/04-sheet-items.css";
+@import "./styles/print/05-sheet-totals.css";
+@import "./styles/print/06-statement-items.css";
+@import "./styles/print/07-ticket-format.css";
+@import "./styles/print/08-screen-mobile.css";
+@import "./styles/print/09-print-media.css";

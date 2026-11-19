@@ -1,0 +1,95 @@
+.product-filter {
+  flex-wrap: nowrap;
+}
+
+@media (max-width: 575.98px) {
+  .product-filter {
+    width: 100%;
+  }
+
+  .product-filter .btn {
+    flex: 1 1 0;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    white-space: nowrap;
+  }
+}
+
+.product-name-cell {
+  min-width: 8rem;
+}
+
+.product-code {
+  font-size: 0.875em;
+  font-variant-numeric: tabular-nums;
+  color: var(--bs-secondary-color);
+  overflow-wrap: anywhere;
+}
+
+.products-table td.product-code {
+  min-width: 10rem;
+}
+
+.product-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem 0.5rem;
+}
+
+.product-stock {
+  width: 1%;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.product-stock .badge {
+  min-width: 2rem;
+  font-size: 0.85em;
+}
+
+.product-inactive .product-name,
+.product-inactive .amount-cell > .text-nowrap {
+  color: var(--bs-secondary-color);
+}
+
+.products-table .row-actions-compact {
+  flex-wrap: wrap;
+  gap: 0.125rem 0.625rem;
+}
+
+@media (max-width: 1199.98px) {
+  .products-table .amount-cell small {
+    display: block;
+  }
+}
+
+.product-price-inline {
+  margin-top: 0.25rem;
+}
+
+.products-table .product-price-inline small {
+  display: inline;
+}
+
+.product-price-preview {
+  min-height: 1.25rem;
+}
+
+@media (min-width: 1200px) {
+  .products-table .amount-cell {
+    white-space: nowrap;
+  }
+}
+
+.product-code-input {
+  text-transform: uppercase;
+}
+
+.product-code-input::placeholder {
+  text-transform: none;
+}
+
+.min-w-0 {
+  min-width: 0;
+}

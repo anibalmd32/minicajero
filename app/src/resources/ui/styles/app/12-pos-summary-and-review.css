@@ -1,0 +1,113 @@
+.pos-summary-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1030;
+  padding: 0.625rem 0 calc(0.625rem + env(safe-area-inset-bottom));
+  background-color: var(--bs-body-bg);
+  border-top: 1px solid var(--bs-border-color);
+  box-shadow: 0 -0.25rem 1rem rgba(0, 0, 0, 0.08);
+}
+
+.pos-summary-primary {
+  display: block;
+  font-size: clamp(1rem, 5vw, 1.25rem);
+  font-weight: 700;
+  line-height: 1.2;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.pos-summary-secondary {
+  display: block;
+  font-size: 0.8125rem;
+  color: var(--bs-secondary-color);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.sale-review-meta {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.sale-review-meta dt {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--bs-secondary-color);
+}
+
+.sale-review-meta dd {
+  margin-bottom: 0;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.sale-review-table td.amount-cell small {
+  display: block;
+}
+
+.sale-review-total {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  text-align: center;
+  background-color: var(--bs-tertiary-bg);
+  border: 1px solid var(--bs-border-color);
+  border-radius: var(--bs-border-radius-lg);
+}
+
+.sale-review-total-label {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--mc-ink-soft);
+}
+
+.sale-review-total-primary {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.sale-review-total-secondary {
+  font-size: 1rem;
+  color: var(--bs-secondary-color);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+.sale-review-debt {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1rem;
+  margin-bottom: 1rem;
+  padding: 0.625rem 0.75rem;
+  background-color: var(--bs-danger-bg-subtle);
+  border: 1px solid var(--bs-danger-border-subtle);
+  border-radius: var(--bs-border-radius);
+}
+
+.sale-review-debt dt {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--bs-danger-text-emphasis);
+}
+
+.sale-review-debt dd {
+  margin-bottom: 0;
+  font-weight: 700;
+  color: var(--bs-danger-text-emphasis);
+}
+
+.sale-review-debt dd small {
+  display: block;
+  font-weight: 400;
+}

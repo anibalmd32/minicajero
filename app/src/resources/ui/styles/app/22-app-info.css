@@ -1,0 +1,36 @@
+.app-info-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.app-info-list dt {
+  font-size: 0.8125rem;
+  font-weight: 400;
+  color: var(--bs-secondary-color);
+}
+
+.app-info-list dd {
+  margin: 0;
+  font-weight: 600;
+}
+
+.app-path {
+  display: inline-block;
+  max-width: 100%;
+  font-weight: 400;
+  overflow-wrap: anywhere;
+  word-break: break-all;
+}
+
+.app-closed {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.app-closed-card {
+  width: 100%;
+  max-width: 34rem;
+}

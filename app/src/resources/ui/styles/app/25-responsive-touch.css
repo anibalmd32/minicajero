@@ -1,0 +1,85 @@
+@media (max-width: 575.98px) {
+  .phone-help-steps {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .phone-help-step {
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .phone-help-step .phone-mock {
+    flex: 0 0 6.5rem;
+  }
+
+  .phone-help-step figcaption {
+    text-align: start;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .pos-line-grid {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "name name"
+      "unit remove"
+      "qty total";
+    row-gap: 0.25rem;
+  }
+
+  .pos-line-remove {
+    align-self: center;
+  }
+}
+
+.pos-help-touch {
+  display: none;
+}
+
+@media (max-width: 767.98px), (hover: none), (pointer: coarse) {
+  .pos-help-keyboard {
+    display: none;
+  }
+
+  .pos-help-touch {
+    display: inline;
+  }
+}
+
+@media (max-width: 991.98px), (pointer: coarse) {
+  .pos-qty {
+    width: 9.25rem;
+  }
+
+  .pos-qty .btn,
+  .pos-qty .form-control,
+  .pos-cart-setup .btn-group-sm > .btn,
+  #pos-clear,
+  #pos-customer-new,
+  #pos-customer-change {
+    min-height: 2.75rem;
+  }
+
+  .pos-qty .btn {
+    min-width: 2.75rem;
+  }
+
+  .pos-qty .btn,
+  .pos-cart-setup .btn-group-sm > .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .pos-line-remove,
+  #pos-customer-new {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 0.5rem;
+  }
+
+  #pos-cart-header .btn-close {
+    padding: 0.875rem;
+  }
+}

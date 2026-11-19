@@ -1,0 +1,56 @@
+@media print {
+  html,
+  body {
+    min-height: 0;
+    background-color: #fff !important;
+  }
+
+  body {
+    display: block;
+  }
+
+  .print-main {
+    padding: 0;
+  }
+
+  .invoice-sheet,
+  .print-format-a4 .invoice-sheet,
+  .print-format-ticket .invoice-sheet {
+    width: auto;
+    max-width: none;
+    padding: 0;
+    overflow: visible;
+    color: #000;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .sheet-watermark {
+    position: fixed;
+    color: rgba(0, 0, 0, 0.1);
+  }
+
+  .sheet-header,
+  .sheet-items th,
+  .sheet-totals tbody:first-child .sheet-total-row:nth-last-child(2) > * {
+    border-color: #000;
+  }
+
+  .sheet-items td {
+    border-bottom-color: #bbb;
+  }
+
+  .sheet-void {
+    color: #000;
+  }
+
+  .invoice-sheet small,
+  .sheet-label,
+  .sheet-label-inline,
+  .sheet-meta-list dt,
+  .sheet-item-code,
+  .sheet-item-unit,
+  .sheet-balance-note {
+    color: #444 !important;
+  }
+}

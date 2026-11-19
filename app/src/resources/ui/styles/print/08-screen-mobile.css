@@ -1,0 +1,48 @@
+@media screen and (max-width: 575.98px) {
+  .print-main {
+    padding: 0.75rem 0.5rem 1.5rem;
+  }
+
+  .invoice-sheet {
+    padding: 1rem;
+    font-size: 10pt;
+  }
+
+  .print-format-ticket .invoice-sheet {
+    padding: 4mm;
+    font-size: 8.5pt;
+  }
+
+  .sheet-watermark {
+    font-size: 54pt;
+  }
+
+  .sheet-items .col-qty,
+  .sheet-items .col-unit,
+  .statement-items .col-date,
+  .statement-items .col-money {
+    display: none;
+  }
+
+  .statement-items .col-balance {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .sheet-items .col-amount {
+    width: auto;
+    white-space: nowrap;
+  }
+
+  .sheet-items .col-desc {
+    padding-left: 0;
+  }
+
+  .sheet-item-unit {
+    display: block;
+  }
+
+  .sheet-totals {
+    flex-basis: 100%;
+  }
+}

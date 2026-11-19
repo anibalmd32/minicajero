@@ -1,0 +1,78 @@
+.app-navbar {
+  --bs-navbar-color: rgba(255, 255, 255, 0.72);
+  --bs-navbar-hover-color: #fff;
+  --bs-navbar-active-color: #fff;
+  --bs-navbar-brand-color: #fff;
+  --bs-navbar-brand-hover-color: #fff;
+  background-color: var(--mc-ink);
+}
+
+.app-navbar .nav-link {
+  position: relative;
+  font-weight: 600;
+}
+
+.app-navbar .nav-link.active::after {
+  content: "";
+  position: absolute;
+  left: var(--bs-navbar-nav-link-padding-x);
+  right: var(--bs-navbar-nav-link-padding-x);
+  bottom: -0.15rem;
+  height: 3px;
+  border-radius: 2px;
+  background-color: var(--mc-yellow);
+}
+
+@media (max-width: 991.98px) {
+  .app-navbar .nav-link.active::after {
+    left: -0.75rem;
+    right: auto;
+    top: 0.5rem;
+    bottom: 0.5rem;
+    width: 3px;
+    height: auto;
+  }
+
+  .app-navbar .navbar-collapse .navbar-nav {
+    padding-left: 0.75rem;
+  }
+}
+
+.app-navbar a:focus-visible,
+.app-navbar .btn:focus-visible,
+.app-navbar .nav-link:focus-visible {
+  outline-color: var(--mc-yellow);
+}
+
+.app-navbar .btn-outline-light {
+  --bs-btn-border-color: rgba(255, 255, 255, 0.35);
+  --bs-btn-hover-bg: rgba(255, 255, 255, 0.12);
+  --bs-btn-hover-color: #fff;
+  --bs-btn-hover-border-color: rgba(255, 255, 255, 0.5);
+  --bs-btn-active-bg: #fff;
+  --bs-btn-active-color: var(--mc-ink);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+.font-monospace,
+code,
+kbd {
+  font-family: var(--bs-body-font-family) !important;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.01em;
+}
+
+code {
+  color: inherit;
+  font-size: inherit;
+}
