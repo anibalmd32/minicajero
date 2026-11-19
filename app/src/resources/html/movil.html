@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#0d6efd">
+  <title>Escáner · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/movil.css">
+  <script type="module" src="../ui/pages/movil/index.ts"></script>
+</head>
+<body>
+  <header class="phone-header">
+    <div class="phone-brand">
+      <img class="phone-logo" src="../../../assets/minicajero.svg" alt="" width="32" height="32">
+      <div class="phone-brand-text">
+        <span class="phone-brand-name">MiniCajero</span>
+        <span class="phone-brand-sub">Escáner</span>
+      </div>
+    </div>
+    <span id="phone-badge" class="phone-badge phone-badge-wait">
+      <span class="phone-badge-dot" aria-hidden="true"></span>
+      <span id="phone-badge-text">Conectando…</span>
+    </span>
+  </header>
+
+  <main class="phone-main">
+    <div id="phone-banner" class="phone-banner phone-banner-wait" role="status" aria-live="polite">
+      <span id="phone-banner-spinner" class="spinner-border spinner-border-sm flex-shrink-0" aria-hidden="true"></span>
+      <div class="min-w-0">
+        <p id="phone-status" class="phone-banner-title">Conectando…</p>
+        <p id="phone-context" class="phone-banner-text d-none"></p>
+      </div>
+    </div>
+
+    <section id="phone-scanner" aria-label="Escáner">
+      <div id="phone-camera" class="phone-camera">
+        <video id="phone-video" class="phone-video" muted playsinline autoplay disablepictureinpicture></video>
+        <div id="phone-guide" class="phone-guide d-none" aria-hidden="true">
+          <span class="phone-guide-line"></span>
+        </div>
+        <p id="phone-camera-hint" class="phone-camera-hint d-none">Apunta al código de barras</p>
+        <button type="button" id="phone-torch" class="phone-torch d-none" aria-pressed="false" aria-label="Linterna">
+          <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 2h12v5l-3 4v11H9V11L6 7z"/>
+            <path d="M6 7h12"/>
+            <path d="M12 14v2"/>
+          </svg>
+        </button>
+        <div id="phone-camera-overlay" class="phone-camera-overlay">
+          <svg class="phone-camera-icon" viewBox="0 0 24 24" width="44" height="44" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7V5a2 2 0 0 1 2-2h2M17 3h2a2 2 0 0 1 2 2v2M21 17v2a2 2 0 0 1-2 2h-2M7 21H5a2 2 0 0 1-2-2v-2"/>
+            <path d="M7 8v8M10 8v8M13 8v8M16 8v8"/>
+          </svg>
+          <p id="phone-camera-message" class="phone-camera-message">Usa la cámara para leer los códigos de barras.</p>
+          <span id="phone-camera-spinner" class="spinner-border text-light d-none" aria-hidden="true"></span>
+          <button type="button" id="phone-camera-start" class="btn btn-accent btn-lg px-4">Activar cámara</button>
+        </div>
+        <div id="phone-flash" class="phone-flash" aria-hidden="true"></div>
+        <p id="phone-last" class="phone-last d-none" aria-live="polite"></p>
+      </div>
+
+      <form id="phone-manual-form" class="phone-card" autocomplete="off" novalidate>
+        <label for="phone-manual-code" class="form-label fw-semibold">¿No se lee? Escribe el código</label>
+        <div class="input-group input-group-lg has-validation">
+          <input type="text" class="form-control phone-code-input" id="phone-manual-code" maxlength="64" inputmode="numeric"
+            enterkeyhint="send" spellcheck="false" autocapitalize="characters" autocorrect="off" placeholder="Código" disabled>
+          <button type="button" class="btn btn-outline-secondary phone-keyboard-toggle" id="phone-keyboard-toggle"
+            aria-label="Usar teclado con letras">ABC</button>
+          <button type="submit" class="btn btn-primary" id="phone-manual-send" disabled>Enviar</button>
+          <div id="phone-manual-feedback" class="invalid-feedback"></div>
+        </div>
+      </form>
+
+      <section class="phone-card" aria-labelledby="phone-history-title">
+        <h2 id="phone-history-title" class="phone-section-title">Últimos escaneos</h2>
+        <p id="phone-history-empty" class="text-body-secondary mb-0">Los códigos que envíes aparecerán aquí.</p>
+        <ul id="phone-history" class="phone-history list-unstyled mb-0"></ul>
+      </section>
+
+      <div id="phone-disconnect" class="phone-disconnect">
+        <button type="button" id="phone-disconnect-ask" class="btn btn-outline-danger btn-lg w-100">Desconectar</button>
+        <div id="phone-disconnect-confirm" class="phone-card d-none">
+          <p class="fw-semibold mb-3">¿Desconectar este teléfono? Para volver tendrás que escanear otra vez el código de la computadora.</p>
+          <div class="d-grid gap-2">
+            <button type="button" id="phone-disconnect-yes" class="btn btn-danger btn-lg">Sí, desconectar</button>
+            <button type="button" id="phone-disconnect-no" class="btn btn-outline-secondary btn-lg">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="phone-ended" class="phone-card phone-ended d-none" aria-live="polite">
+      <img class="phone-ended-logo" src="../../../assets/minicajero.svg" alt="" width="64" height="64">
+      <p id="phone-ended-text" class="phone-ended-text mb-0"></p>
+      <button type="button" id="phone-reload" class="btn btn-primary btn-lg w-100 mt-3 d-none">Recargar</button>
+    </section>
+  </main>
+</body>
+</html>

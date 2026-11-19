@@ -1,0 +1,80 @@
+.phone-status-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.phone-status-icon.tone-success {
+  color: #fff;
+  background-color: var(--bs-success);
+}
+
+.phone-status-icon.tone-warning {
+  color: #212529;
+  background-color: var(--bs-warning);
+}
+
+.phone-status-icon.tone-danger {
+  color: #fff;
+  background-color: var(--bs-danger);
+}
+
+.phone-status-icon.tone-pending {
+  color: var(--bs-secondary-color);
+  background-color: var(--bs-secondary-bg);
+}
+
+.phone-history-body {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.phone-history-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.phone-history-code {
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+.phone-history-time {
+  flex: 0 0 auto;
+  font-size: 0.8rem;
+  color: var(--bs-secondary-color);
+  font-variant-numeric: tabular-nums;
+}
+
+.phone-history-message {
+  margin: 0;
+  font-size: 0.92rem;
+  overflow-wrap: anywhere;
+}
+
+.phone-history-message.tone-success {
+  color: var(--bs-success-text-emphasis);
+}
+
+.phone-history-message.tone-warning {
+  color: var(--bs-warning-text-emphasis);
+}
+
+.phone-history-message.tone-danger {
+  color: var(--bs-danger-text-emphasis);
+}
+
+.phone-history-message.tone-pending {
+  color: var(--bs-secondary-color);
+}

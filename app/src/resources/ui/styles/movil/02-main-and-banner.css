@@ -1,0 +1,57 @@
+.phone-main {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  max-width: 34rem;
+  margin: 0 auto;
+  padding: 0.85rem 0.85rem max(1.5rem, env(safe-area-inset-bottom));
+}
+
+#phone-scanner {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.phone-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--bs-border-radius-lg);
+}
+
+.phone-banner-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.phone-banner-text {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.phone-banner-ok {
+  color: var(--bs-success-text-emphasis);
+  background-color: var(--bs-success-bg-subtle);
+  border-color: var(--bs-success-border-subtle);
+}
+
+.phone-banner-idle {
+  color: var(--bs-warning-text-emphasis);
+  background-color: var(--bs-warning-bg-subtle);
+  border-color: var(--bs-warning-border-subtle);
+}
+
+.phone-banner-wait {
+  color: var(--bs-secondary-text-emphasis);
+  background-color: var(--bs-secondary-bg-subtle);
+  border-color: var(--bs-secondary-border-subtle);
+}
+
+.phone-banner-lost {
+  color: var(--bs-warning-text-emphasis);
+  background-color: var(--bs-warning-bg-subtle);
+  border-color: var(--bs-warning-border-subtle);
+}

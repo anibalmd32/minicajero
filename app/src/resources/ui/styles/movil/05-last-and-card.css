@@ -1,0 +1,68 @@
+.phone-last {
+  position: absolute;
+  left: 0.6rem;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--bs-border-radius-lg);
+  background-color: rgba(0, 0, 0, 0.72);
+  font-weight: 600;
+  line-height: 1.25;
+  transition: opacity 0.3s;
+}
+
+.phone-last.is-fading {
+  opacity: 0;
+}
+
+.phone-last-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.phone-card {
+  padding: 1rem;
+  border: 1px solid var(--bs-border-color-translucent);
+  border-radius: var(--bs-border-radius-lg);
+  background-color: var(--bs-body-bg);
+  box-shadow: var(--bs-box-shadow-sm);
+}
+
+.phone-code-input {
+  min-width: 0;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.03em;
+}
+
+.phone-keyboard-toggle {
+  min-width: 3.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.phone-section-title {
+  margin-bottom: 0.75rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.phone-history li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 0;
+  border-top: 1px solid var(--bs-border-color-translucent);
+}
+
+.phone-history li:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.phone-history li:last-child {
+  padding-bottom: 0;
+}

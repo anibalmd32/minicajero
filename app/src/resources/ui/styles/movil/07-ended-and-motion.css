@@ -1,0 +1,28 @@
+.phone-ended {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 1rem;
+  padding: 2rem 1.25rem;
+  text-align: center;
+}
+
+.phone-ended-logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 1rem;
+}
+
+.phone-ended-text {
+  margin-bottom: 0.75rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .phone-guide-line,
+  .phone-badge-dot,
+  .phone-flash.is-on {
+    animation: none;
+  }
+}

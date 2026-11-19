@@ -1,0 +1,9 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import "./theme.css";
+@import "./styles/movil/01-header-and-badge.css";
+@import "./styles/movil/02-main-and-banner.css";
+@import "./styles/movil/03-camera-and-guide.css";
+@import "./styles/movil/04-flash-and-overlay.css";
+@import "./styles/movil/05-last-and-card.css";
+@import "./styles/movil/06-history.css";
+@import "./styles/movil/07-ended-and-motion.css";

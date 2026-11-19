@@ -1,0 +1,81 @@
+.phone-flash {
+  position: absolute;
+  inset: 0;
+  background-color: #fff;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.phone-flash.is-on {
+  animation: phone-flash 0.35s ease-out;
+}
+
+@keyframes phone-flash {
+  0% {
+    opacity: 0.55;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+.phone-camera-hint {
+  position: absolute;
+  top: 0.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 6rem);
+  margin: 0;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background-color: rgba(0, 0, 0, 0.55);
+  font-size: 0.9rem;
+  text-align: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.phone-torch {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border: 0;
+  border-radius: 50%;
+  color: #fff;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.phone-torch[aria-pressed="true"] {
+  color: #212529;
+  background-color: #ffd43b;
+}
+
+.phone-camera-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  padding: 1.25rem;
+  text-align: center;
+  background: radial-gradient(circle at 50% 35%, #2a3240, #12161c 75%);
+}
+
+.phone-camera-icon {
+  opacity: 0.85;
+}
+
+.phone-camera-message {
+  max-width: 22rem;
+  margin: 0;
+  font-size: 1.05rem;
+}
