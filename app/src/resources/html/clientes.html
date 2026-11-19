@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Clientes · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <script type="module" src="../ui/pages/clientes/index.ts"></script>
+</head>
+<body>
+  <header id="app-nav"></header>
+  <main class="container py-4">
+    <div class="page-header">
+      <h1>Clientes</h1>
+      <button type="button" id="customer-new" class="btn btn-primary">Nuevo cliente</button>
+    </div>
+
+    <section class="card shadow-sm" aria-labelledby="customers-title">
+      <h2 id="customers-title" class="visually-hidden">Listado de clientes</h2>
+      <div class="card-body border-bottom">
+        <form id="customer-filters" class="list-toolbar" role="search" autocomplete="off">
+          <div class="list-search">
+            <label for="customer-search" class="visually-hidden">Buscar clientes</label>
+            <input type="search" class="form-control" id="customer-search" name="q" maxlength="100"
+              placeholder="Nombre, documento o teléfono" aria-describedby="customer-count">
+          </div>
+          <div class="form-check form-switch mb-0">
+            <input class="form-check-input" type="checkbox" role="switch" id="customer-debtors" name="deudores">
+            <label class="form-check-label" for="customer-debtors">Solo deudores</label>
+          </div>
+        </form>
+      </div>
+
+      <div id="customers-loading" class="d-flex justify-content-center align-items-center gap-2 py-5 text-secondary" role="status">
+        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+        <span>Cargando clientes…</span>
+      </div>
+
+      <div id="customers-error" class="card-body d-none">
+        <div class="alert alert-danger mb-0" role="alert">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+            <span>No se pudieron cargar los clientes. <span id="customers-error-message"></span></span>
+            <button type="button" id="customers-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+          </div>
+        </div>
+      </div>
+
+      <div id="customers-empty" class="card-body empty-state d-none">
+        <p id="customers-empty-title" class="empty-state-title"></p>
+        <p id="customers-empty-text" class="mb-3"></p>
+        <button type="button" id="customers-empty-action" class="btn btn-outline-primary"></button>
+      </div>
+
+      <div id="customers-list" class="d-none">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 list-table">
+            <thead>
+              <tr>
+                <th scope="col" class="d-none d-md-table-cell">Documento</th>
+                <th scope="col">Nombre</th>
+                <th scope="col" class="d-none d-lg-table-cell">Teléfono</th>
+                <th scope="col">Saldo</th>
+                <th scope="col" class="text-end d-none d-sm-table-cell"><span class="visually-hidden">Acciones</span></th>
+              </tr>
+            </thead>
+            <tbody id="customers-body"></tbody>
+          </table>
+        </div>
+        <nav class="card-footer bg-body d-flex flex-wrap align-items-center justify-content-between gap-2" aria-label="Paginación de clientes">
+          <span id="customer-count" class="small text-body-secondary" aria-live="polite"></span>
+          <div class="btn-group btn-group-sm">
+            <button type="button" id="customers-prev" class="btn btn-outline-secondary">Anterior</button>
+            <button type="button" id="customers-next" class="btn btn-outline-secondary">Siguiente</button>
+          </div>
+        </nav>
+      </div>
+    </section>
+  </main>
+
+  <div class="modal fade" id="customer-modal" tabindex="-1" role="dialog" aria-labelledby="customer-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="customer-modal-title">Nuevo cliente</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="customer-form" autocomplete="off">
+            <div class="row g-3">
+              <div class="col-12 col-sm-6">
+                <label for="customer_first_name" class="form-label">Nombre <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" class="form-control" id="customer_first_name" name="first_name" maxlength="60" required placeholder="Ej.: María">
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="customer_last_name" class="form-label">Apellidos <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" class="form-control" id="customer_last_name" name="last_name" maxlength="60" required placeholder="Ej.: Pérez González">
+              </div>
+              <div class="col-12">
+                <label for="customer_doc_number" class="form-label">Documento <span class="text-danger" aria-hidden="true">*</span></label>
+                <div class="input-group">
+                  <select class="form-select customer-doc-type" id="customer_doc_type" name="doc_type" aria-label="Tipo de documento">
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                    <option value="J">J</option>
+                  </select>
+                  <input type="text" class="form-control" id="customer_doc_number" name="doc_number" maxlength="30" required
+                    inputmode="numeric" placeholder="12345678" aria-describedby="customer_doc_help">
+                </div>
+                <div id="customer_doc_help" class="form-text">V: venezolano · E: extranjero · J: RIF de empresa (con dígito verificador, ej.: 12345678-9).</div>
+              </div>
+              <div class="col-12">
+                <label for="customer_phone" class="form-label">Teléfono <span class="text-body-secondary small">(opcional)</span></label>
+                <input type="tel" class="form-control" id="customer_phone" name="phone" maxlength="25" inputmode="tel" placeholder="0412-1234567">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="customer-save" form="customer-form">Guardar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

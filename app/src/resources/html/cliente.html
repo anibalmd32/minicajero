@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estado de cuenta · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <script type="module" src="../ui/pages/cliente/index.ts"></script>
+</head>
+<body>
+  <header id="app-nav"></header>
+  <main class="container py-4">
+    <nav aria-label="Ruta de navegación">
+      <ol class="breadcrumb mb-2">
+        <li class="breadcrumb-item"><a href="/clientes" id="statement-back">Clientes</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Estado de cuenta</li>
+      </ol>
+    </nav>
+    <div class="page-header">
+      <div class="min-w-0">
+        <h1 id="statement-title" class="text-break">Estado de cuenta</h1>
+        <p id="statement-subtitle" class="text-body-secondary mb-0 d-none"></p>
+      </div>
+      <div class="statement-actions">
+        <a id="statement-invoices" class="btn btn-outline-secondary d-none" href="/facturas">Ver facturas</a>
+        <a id="statement-print" class="btn btn-outline-secondary d-none" href="/clientes">Imprimir</a>
+        <button type="button" id="statement-pay" class="btn btn-success d-none">Registrar abono</button>
+      </div>
+    </div>
+
+    <div id="statement-loading" class="d-flex justify-content-center align-items-center gap-2 py-5 text-secondary" role="status">
+      <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+      <span>Cargando estado de cuenta…</span>
+    </div>
+
+    <div id="statement-error" class="d-none">
+      <div class="alert alert-danger" role="alert">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+          <span id="statement-error-message"></span>
+          <div class="d-flex flex-wrap gap-2">
+            <button type="button" id="statement-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+            <a href="/clientes" class="btn btn-sm btn-outline-secondary">Ir a clientes</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="statement-content" class="d-none">
+      <section class="card shadow-sm mb-4" aria-labelledby="statement-summary-title">
+        <h2 id="statement-summary-title" class="visually-hidden">Resumen de la deuda</h2>
+        <dl class="statement-summary">
+          <div class="statement-summary-main">
+            <dt>Saldo pendiente</dt>
+            <dd>
+              <span id="statement-balance-primary" class="statement-balance-primary"></span>
+              <span id="statement-balance-secondary" class="statement-balance-secondary"></span>
+              <span id="statement-balance-note" class="statement-balance-note"></span>
+            </dd>
+          </div>
+          <div><dt>Facturas pendientes</dt><dd id="statement-pending-count"></dd></div>
+          <div><dt>Total fiado</dt><dd id="statement-credit-total" class="amount-cell"></dd></div>
+          <div><dt>Abonado</dt><dd id="statement-paid-total" class="amount-cell"></dd></div>
+          <div><dt>Compras de contado</dt><dd id="statement-cash-total" class="amount-cell"></dd></div>
+        </dl>
+      </section>
+
+      <section id="statement-pending" class="card shadow-sm mb-4 d-none" aria-labelledby="statement-pending-title">
+        <div class="card-header bg-body d-flex flex-wrap align-items-baseline justify-content-between gap-2">
+          <h2 id="statement-pending-title" class="fs-6 fw-semibold mb-0">Facturas pendientes</h2>
+          <span class="small text-body-secondary">Un abono global se aplica primero a la más antigua.</span>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover align-middle mb-0 list-table statement-table">
+            <thead>
+              <tr>
+                <th scope="col">Factura</th>
+                <th scope="col" class="d-none d-md-table-cell">Total</th>
+                <th scope="col" class="d-none d-md-table-cell">Abonado</th>
+                <th scope="col">Saldo</th>
+              </tr>
+            </thead>
+            <tbody id="statement-pending-body"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section class="card shadow-sm" aria-labelledby="statement-entries-title">
+        <div class="card-header bg-body d-flex flex-wrap align-items-baseline justify-content-between gap-2">
+          <h2 id="statement-entries-title" class="fs-6 fw-semibold mb-0">Movimientos</h2>
+          <span id="statement-entries-count" class="small text-body-secondary"></span>
+        </div>
+        <div id="statement-empty" class="card-body empty-state d-none">
+          <p class="empty-state-title">Sin movimientos</p>
+          <p class="mb-3">Este cliente aún no tiene facturas. Sus compras y abonos aparecerán aquí.</p>
+          <a href="/ventas" class="btn btn-outline-primary">Registrar una venta</a>
+        </div>
+        <div id="statement-entries" class="table-responsive">
+          <table class="table align-middle mb-0 list-table statement-table">
+            <thead>
+              <tr>
+                <th scope="col" class="d-none d-md-table-cell">Fecha</th>
+                <th scope="col">Concepto</th>
+                <th scope="col" class="d-none d-sm-table-cell">Cargo</th>
+                <th scope="col" class="d-none d-sm-table-cell">Abono</th>
+                <th scope="col" class="d-sm-none">Importe</th>
+                <th scope="col">Saldo</th>
+              </tr>
+            </thead>
+            <tbody id="statement-entries-body"></tbody>
+          </table>
+        </div>
+        <p class="card-footer bg-body small text-body-secondary mb-0">
+          La deuda se lleva en dólares. Cargos y abonos muestran los bolívares de su día; el saldo en Bs se calcula con la tasa vigente.
+        </p>
+      </section>
+    </div>
+  </main>
+
+  <div class="modal fade" id="statement-payment-modal" tabindex="-1" role="dialog" aria-labelledby="statement-payment-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="statement-payment-title">Registrar abono</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <form id="statement-payment-form" autocomplete="off"></form>
+          <p class="small text-body-secondary mt-3 mb-0">El abono se reparte entre las facturas pendientes, empezando por la más antigua.</p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success" form="statement-payment-form">Registrar abono</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

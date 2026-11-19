@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Estado de cuenta · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <link rel="stylesheet" href="../ui/invoice-print.css">
+  <style id="print-page-rule">@page { size: letter portrait; margin: 14mm 14mm 16mm; }</style>
+  <script type="module" src="../ui/pages/estado-cuenta-imprimir/index.ts"></script>
+</head>
+<body class="print-page print-format-letter">
+  <div class="print-toolbar d-print-none" role="region" aria-label="Opciones de impresión">
+    <div class="container print-toolbar-inner">
+      <a href="/clientes" id="print-back" class="btn btn-outline-secondary">Volver</a>
+      <p id="print-toolbar-title" class="print-toolbar-title">Estado de cuenta</p>
+      <div class="print-toolbar-actions">
+        <label for="print-format" class="visually-hidden">Formato de papel</label>
+        <select id="print-format" class="form-select print-format-select"></select>
+        <button type="button" id="print-submit" class="btn btn-primary" disabled>Imprimir / Guardar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="print-main">
+    <div id="print-loading" class="print-state d-print-none" role="status">
+      <div class="spinner-border text-primary" aria-hidden="true"></div>
+      <p class="mb-0 mt-2 text-body-secondary">Cargando estado de cuenta…</p>
+    </div>
+
+    <div id="print-error" class="print-state d-none d-print-none" role="alert">
+      <p class="empty-state-title" id="print-error-title">No se pudo cargar el estado de cuenta</p>
+      <p id="print-error-message" class="text-body-secondary"></p>
+      <div class="d-flex flex-wrap justify-content-center gap-2">
+        <button type="button" id="print-retry" class="btn btn-primary">Reintentar</button>
+        <a href="/clientes" class="btn btn-outline-secondary">Ir a clientes</a>
+      </div>
+    </div>
+
+    <div id="print-business-hint" class="alert alert-info print-hint d-none d-print-none" role="note">
+      Faltan datos del negocio en el encabezado (nombre, RIF, dirección o teléfono).
+      <a href="/configuracion" class="alert-link">Complétalos en Configuración</a>.
+    </div>
+
+    <article id="statement-sheet" class="invoice-sheet statement-sheet d-none" aria-label="Estado de cuenta">
+      <header class="sheet-header">
+        <div class="sheet-business">
+          <div class="sheet-business-info">
+            <p id="sheet-business-name" class="sheet-business-name"></p>
+            <p id="sheet-business-rif" class="d-none"></p>
+            <p id="sheet-business-address" class="d-none"></p>
+            <p id="sheet-business-phone" class="d-none"></p>
+          </div>
+        </div>
+        <div class="sheet-meta">
+          <p class="sheet-doc-title">Estado de cuenta</p>
+          <dl class="sheet-meta-list">
+            <div><dt>Fecha</dt><dd id="sheet-date"></dd></div>
+            <div><dt>Hora</dt><dd id="sheet-time"></dd></div>
+          </dl>
+        </div>
+      </header>
+
+      <section class="sheet-parties">
+        <div class="sheet-customer">
+          <p class="sheet-label">Cliente</p>
+          <p id="sheet-customer-name" class="sheet-customer-name"></p>
+          <p id="sheet-customer-document"></p>
+          <p id="sheet-customer-phone" class="d-none"></p>
+        </div>
+        <div class="sheet-condition">
+          <p class="sheet-label">Saldo pendiente</p>
+          <p id="sheet-balance-head" class="sheet-condition-value"></p>
+        </div>
+      </section>
+
+      <table class="sheet-items statement-items">
+        <thead>
+          <tr>
+            <th scope="col" class="col-date">Fecha</th>
+            <th scope="col" class="col-desc">Concepto</th>
+            <th scope="col" class="col-money">Cargo</th>
+            <th scope="col" class="col-money">Abono</th>
+            <th scope="col" class="col-balance">Saldo</th>
+          </tr>
+        </thead>
+        <tbody id="sheet-entries"></tbody>
+      </table>
+      <p id="sheet-empty" class="text-center d-none">Sin movimientos.</p>
+
+      <section class="sheet-summary">
+        <div class="sheet-rate">
+          <p><span class="sheet-label-inline">Tasa vigente:</span> <span id="sheet-rate"></span></p>
+          <p class="sheet-notes">La deuda se lleva en dólares. Cargos y abonos muestran los bolívares de su día; el saldo en bolívares se calcula con la tasa vigente.</p>
+        </div>
+        <table class="sheet-totals">
+          <tbody>
+            <tr>
+              <th scope="row">Total fiado</th>
+              <td id="sheet-credit-total"></td>
+            </tr>
+            <tr>
+              <th scope="row">Abonado</th>
+              <td id="sheet-paid-total"></td>
+            </tr>
+            <tr class="sheet-total-row">
+              <th scope="row">Saldo USD</th>
+              <td id="sheet-balance-usd"></td>
+            </tr>
+            <tr class="sheet-total-row">
+              <th scope="row">Saldo Bs</th>
+              <td id="sheet-balance-bs"></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+    </article>
+  </main>
+</body>
+</html>
