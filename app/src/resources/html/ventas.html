@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ventas · MiniCajero</title>
+  <link rel="icon" type="image/svg+xml" href="../../../assets/minicajero.svg">
+  <link rel="stylesheet" href="../ui/app.css">
+  <script type="module" src="../ui/pages/ventas/index.ts"></script>
+</head>
+<body class="pos-page">
+  <header id="app-nav"></header>
+  <main class="container py-3 py-lg-4">
+    <div class="row g-3 g-xl-4 align-items-start">
+      <section class="col-12 col-lg-7" aria-labelledby="pos-title">
+        <h1 id="pos-title" class="visually-hidden">Nueva venta</h1>
+        <div class="card shadow-sm">
+          <div class="card-body pb-2">
+            <form id="pos-search-form" role="search" autocomplete="off">
+              <label for="pos-search" class="form-label fw-semibold">Buscar producto</label>
+              <input type="search" class="form-control form-control-lg" id="pos-search" name="q" maxlength="100"
+                placeholder="Código o nombre" role="combobox" aria-controls="pos-results"
+                aria-expanded="true" aria-autocomplete="list" aria-describedby="pos-search-help" enterkeyhint="enter"
+                spellcheck="false" autofocus>
+              <div id="pos-search-help" class="form-text">
+                <span class="pos-help-keyboard">Enter agrega el primero (las flechas eligen otro) y «3*» delante agrega 3. F2 vuelve aquí, F4 cobra.</span>
+                <span class="pos-help-touch">Toca un producto para agregarlo al carrito.</span>
+              </div>
+              <div id="pos-search-status" class="pos-search-status small" role="status" aria-live="polite"></div>
+            </form>
+          </div>
+
+          <div id="pos-results-loading" class="d-flex justify-content-center align-items-center gap-2 py-5 text-secondary" role="status">
+            <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+            <span>Buscando productos…</span>
+          </div>
+
+          <div id="pos-results-error" class="card-body d-none">
+            <div class="alert alert-danger mb-0" role="alert">
+              <div class="d-flex flex-wrap align-items-center justify-content-between gap-2">
+                <span>No se pudieron cargar los productos. <span id="pos-results-error-message"></span></span>
+                <button type="button" id="pos-results-retry" class="btn btn-sm btn-outline-danger">Reintentar</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="pos-results-empty" class="card-body empty-state d-none">
+            <p id="pos-results-empty-title" class="empty-state-title"></p>
+            <p id="pos-results-empty-text" class="mb-0"></p>
+            <a id="pos-results-empty-link" class="btn btn-outline-primary mt-3 d-none" href="/inventario">Ir a Inventario</a>
+          </div>
+
+          <div id="pos-results" class="pos-results d-none" role="listbox" aria-label="Productos encontrados"></div>
+          <div id="pos-results-more" class="card-footer bg-body small text-body-secondary d-none"></div>
+        </div>
+      </section>
+
+      <aside class="col-12 col-lg-5 pos-cart-col" aria-label="Carrito de la venta">
+        <div class="offcanvas-lg offcanvas-bottom pos-cart-offcanvas" tabindex="-1" id="pos-cart" role="region" aria-labelledby="pos-cart-title">
+          <div class="card shadow-sm pos-cart" id="pos-cart-card">
+            <div class="card-header bg-body d-flex align-items-center gap-2" id="pos-cart-header">
+              <h2 id="pos-cart-title" class="h6 mb-0 me-auto">
+                Carrito <span id="pos-cart-count" class="badge rounded-pill text-bg-primary ms-1"></span>
+              </h2>
+              <button type="button" id="pos-clear" class="btn btn-sm btn-outline-secondary">Vaciar</button>
+              <button type="button" class="btn-close d-lg-none" data-bs-dismiss="offcanvas" data-bs-target="#pos-cart" aria-label="Cerrar carrito"></button>
+            </div>
+
+            <div class="card-body border-bottom pos-cart-setup" id="pos-cart-setup">
+              <div class="mb-2 pos-customer">
+                <div class="d-flex align-items-center justify-content-between gap-2 mb-1">
+                  <label for="pos-customer-search" id="pos-customer-label" class="form-label fw-semibold mb-0">Cliente</label>
+                  <button type="button" id="pos-customer-new" class="btn btn-link btn-sm p-0 text-decoration-none">+ Nuevo cliente</button>
+                </div>
+                <div id="pos-customer-picker" class="position-relative">
+                  <input type="search" class="form-control" id="pos-customer-search" maxlength="100" autocomplete="off"
+                    placeholder="Buscar por nombre o documento" role="combobox" aria-autocomplete="list"
+                    aria-expanded="false" aria-controls="pos-customer-options" aria-describedby="pos-customer-feedback" spellcheck="false">
+                  <div id="pos-customer-options" class="list-group shadow pos-customer-options d-none" role="listbox" aria-label="Clientes"></div>
+                </div>
+                <div id="pos-customer-selected" class="pos-customer-selected d-none">
+                  <div class="min-w-0">
+                    <div id="pos-customer-name" class="fw-semibold text-truncate"></div>
+                    <div id="pos-customer-meta" class="small text-body-secondary"></div>
+                  </div>
+                  <button type="button" id="pos-customer-change" class="btn btn-sm btn-outline-secondary flex-shrink-0">Cambiar</button>
+                </div>
+                <div id="pos-customer-feedback" class="small mt-1 text-body-secondary" aria-live="polite"></div>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <span id="pos-payment-label" class="fw-semibold">Pago</span>
+                <div class="btn-group btn-group-sm flex-grow-1" role="group" aria-labelledby="pos-payment-label">
+                  <input type="radio" class="btn-check" name="pos-payment" id="pos-payment-cash" value="cash" autocomplete="off" checked>
+                  <label class="btn btn-outline-primary" for="pos-payment-cash">Contado</label>
+                  <input type="radio" class="btn-check" name="pos-payment" id="pos-payment-credit" value="credit" autocomplete="off">
+                  <label class="btn btn-outline-primary" for="pos-payment-credit">Fiado</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="pos-cart-scroll">
+              <div id="pos-cart-empty" class="empty-state py-4">
+                <p class="empty-state-title">El carrito está vacío</p>
+                <p class="mb-0 small">Busca un producto y pulsa Enter, o tócalo en la lista, para agregarlo.</p>
+              </div>
+              <ul id="pos-cart-lines" class="list-group list-group-flush pos-cart-lines" aria-label="Productos en el carrito"></ul>
+            </div>
+
+            <div class="card-footer bg-body pos-checkout" id="pos-checkout">
+              <button type="button" id="pos-checkout-who" class="pos-checkout-who d-none" aria-controls="pos-customer-picker">
+                <span id="pos-checkout-who-text" class="text-truncate"></span>
+                <span class="pos-checkout-who-action">Cambiar</span>
+              </button>
+              <dl class="pos-totals">
+                <div class="pos-totals-row">
+                  <dt>Subtotal</dt>
+                  <dd id="pos-subtotal" class="amount-cell"></dd>
+                </div>
+                <div class="pos-totals-row d-none" id="pos-tax-row">
+                  <dt id="pos-tax-label">IVA</dt>
+                  <dd id="pos-tax" class="amount-cell"></dd>
+                </div>
+                <div class="pos-totals-total">
+                  <dt>Total</dt>
+                  <dd>
+                    <span id="pos-total-primary" class="pos-total-primary"></span>
+                    <span id="pos-total-secondary" class="pos-total-secondary"></span>
+                  </dd>
+                </div>
+              </dl>
+              <p id="pos-rate-used" class="pos-rate-used"></p>
+              <div id="pos-sale-alert" class="alert alert-danger py-2 px-3 small mb-2 d-none" role="alert"></div>
+              <button type="button" id="pos-confirm" class="btn btn-accent btn-lg w-100 pos-charge">Cobrar</button>
+              <div id="pos-confirm-hint" class="form-text text-center mb-0" aria-live="polite"></div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <div id="pos-summary-bar" class="pos-summary-bar d-lg-none" role="region" aria-label="Resumen de la venta">
+    <div class="container d-flex align-items-center gap-2">
+      <button type="button" id="pos-summary-open" class="btn btn-link text-start text-decoration-none text-body p-0 flex-grow-1 min-w-0"
+        aria-controls="pos-cart" aria-label="Ver carrito">
+        <span id="pos-summary-count" class="d-block small text-body-secondary"></span>
+        <span id="pos-summary-primary" class="pos-summary-primary"></span>
+        <span id="pos-summary-secondary" class="pos-summary-secondary"></span>
+      </button>
+      <button type="button" id="pos-summary-cart" class="btn btn-outline-primary flex-shrink-0 d-none d-sm-inline-block">Carrito</button>
+      <button type="button" id="pos-summary-charge" class="btn btn-accent flex-shrink-0 px-4 pos-charge">Cobrar</button>
+    </div>
+  </div>
+
+  <div class="modal fade" id="sale-modal" tabindex="-1" role="dialog" aria-labelledby="sale-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="sale-modal-title">Confirmar venta</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="sale-review">
+            <div id="sale-review-changes" class="alert alert-warning small d-none" role="alert"></div>
+            <div class="sale-review-total">
+              <span id="sale-review-total-label" class="sale-review-total-label">Total a cobrar</span>
+              <span id="sale-review-total-primary" class="sale-review-total-primary"></span>
+              <span id="sale-review-total-secondary" class="sale-review-total-secondary"></span>
+              <p id="sale-review-rate" class="pos-rate-used text-center mb-0 mt-1"></p>
+            </div>
+            <dl class="sale-review-meta">
+              <div><dt>Cliente</dt><dd id="sale-review-customer"></dd></div>
+              <div><dt>Pago</dt><dd id="sale-review-payment"></dd></div>
+            </dl>
+            <dl id="sale-review-debt" class="sale-review-debt d-none">
+              <div><dt>Debe ahora</dt><dd id="sale-review-debt-before" class="amount-cell"></dd></div>
+              <div><dt>Quedará debiendo</dt><dd id="sale-review-debt-after" class="amount-cell"></dd></div>
+            </dl>
+            <form id="sale-change-form" class="sale-change" autocomplete="off" novalidate>
+              <label for="sale-received" class="form-label mb-1">Recibido <span class="fw-normal text-body-secondary small">(opcional, para calcular el vuelto)</span></label>
+              <div class="input-group">
+                <input type="radio" class="btn-check" name="sale-received-currency" id="sale-received-usd" value="USD" autocomplete="off">
+                <label class="btn btn-outline-secondary sale-change-currency" for="sale-received-usd" title="Recibido en dólares">$</label>
+                <input type="radio" class="btn-check" name="sale-received-currency" id="sale-received-ves" value="VES" autocomplete="off">
+                <label class="btn btn-outline-secondary sale-change-currency" for="sale-received-ves" title="Recibido en bolívares">Bs</label>
+                <input type="text" class="form-control amount-cell" id="sale-received" inputmode="decimal" maxlength="20"
+                  placeholder="0,00" aria-describedby="sale-change-result">
+              </div>
+              <div id="sale-change-result" class="sale-change-result" aria-live="polite"></div>
+            </form>
+            <details id="sale-review-items" class="sale-review-items">
+              <summary id="sale-review-items-summary">Ver los productos</summary>
+              <div class="table-responsive">
+                <table class="table table-sm align-middle mb-2 sale-review-table">
+                  <thead>
+                    <tr>
+                      <th scope="col">Producto</th>
+                      <th scope="col" class="text-center">Cant.</th>
+                      <th scope="col">Importe</th>
+                    </tr>
+                  </thead>
+                  <tbody id="sale-review-lines"></tbody>
+                </table>
+              </div>
+              <dl class="pos-totals mb-0">
+                <div class="pos-totals-row">
+                  <dt>Subtotal</dt>
+                  <dd id="sale-review-subtotal" class="amount-cell"></dd>
+                </div>
+                <div class="pos-totals-row d-none" id="sale-review-tax-row">
+                  <dt id="sale-review-tax-label">IVA</dt>
+                  <dd id="sale-review-tax" class="amount-cell"></dd>
+                </div>
+              </dl>
+            </details>
+            <div id="sale-review-error" class="alert alert-danger mt-3 mb-0 d-none" role="alert"></div>
+          </div>
+          <div id="sale-done" class="text-center py-2 d-none">
+            <div class="sale-done-icon" aria-hidden="true">✓</div>
+            <p id="sale-done-title" class="fs-4 fw-semibold mb-1"></p>
+            <p id="sale-done-text" class="mb-0 text-body-secondary"></p>
+            <p id="sale-done-total" class="fs-5 mt-2 mb-0"></p>
+            <p id="sale-done-extra" class="sale-done-extra d-none"></p>
+          </div>
+        </div>
+        <div class="modal-footer" id="sale-review-actions">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Volver</button>
+          <button type="button" class="btn btn-accent" id="sale-submit">Cobrar</button>
+        </div>
+        <div class="modal-footer d-none" id="sale-done-actions">
+          <button type="button" class="btn btn-outline-primary" id="sale-print">Imprimir factura</button>
+          <button type="button" class="btn btn-accent" id="sale-new">Nueva venta</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="customer-modal" tabindex="-1" role="dialog" aria-labelledby="customer-modal-title" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-fullscreen-sm-down">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title fs-5" id="customer-modal-title">Nuevo cliente</h2>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <p class="small text-body-secondary">Se registra y queda seleccionado en esta venta.</p>
+          <form id="customer-form" autocomplete="off">
+            <div class="row g-3">
+              <div class="col-12 col-sm-6">
+                <label for="customer_first_name" class="form-label">Nombre <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" class="form-control" id="customer_first_name" name="first_name" maxlength="60" required placeholder="Ej.: María">
+              </div>
+              <div class="col-12 col-sm-6">
+                <label for="customer_last_name" class="form-label">Apellidos <span class="text-danger" aria-hidden="true">*</span></label>
+                <input type="text" class="form-control" id="customer_last_name" name="last_name" maxlength="60" required placeholder="Ej.: Pérez González">
+              </div>
+              <div class="col-12">
+                <label for="customer_doc_number" class="form-label">Documento <span class="text-danger" aria-hidden="true">*</span></label>
+                <div class="input-group">
+                  <select class="form-select customer-doc-type" id="customer_doc_type" name="doc_type" aria-label="Tipo de documento">
+                    <option value="V">V</option>
+                    <option value="E">E</option>
+                    <option value="J">J</option>
+                  </select>
+                  <input type="text" class="form-control" id="customer_doc_number" name="doc_number" maxlength="30" required
+                    inputmode="numeric" placeholder="12345678" aria-describedby="customer_doc_help">
+                </div>
+                <div id="customer_doc_help" class="form-text">V: venezolano · E: extranjero · J: RIF de empresa (con dígito verificador, ej.: 12345678-9).</div>
+              </div>
+              <div class="col-12">
+                <label for="customer_phone" class="form-label">Teléfono <span class="text-body-secondary small">(opcional)</span></label>
+                <input type="tel" class="form-control" id="customer_phone" name="phone" maxlength="25" inputmode="tel" placeholder="0412-1234567">
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary" id="customer-save" form="customer-form">Guardar y seleccionar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

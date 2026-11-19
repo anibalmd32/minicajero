@@ -1,0 +1,33 @@
+import { requireElement } from "../../dom";
+
+/** Elementos del carrito y de la barra de resumen móvil, buscados una sola vez al cargar. */
+export const cartElements = {
+  cartPanel: requireElement<HTMLElement>("pos-cart"),
+  cartCard: requireElement<HTMLElement>("pos-cart-card"),
+  cartHeader: requireElement<HTMLElement>("pos-cart-header"),
+  cartCheckout: requireElement<HTMLElement>("pos-checkout"),
+  cartCount: requireElement<HTMLElement>("pos-cart-count"),
+  clearButton: requireElement<HTMLButtonElement>("pos-clear"),
+  cartEmpty: requireElement<HTMLElement>("pos-cart-empty"),
+  cartLines: requireElement<HTMLUListElement>("pos-cart-lines"),
+  paymentInputs: [...document.querySelectorAll<HTMLInputElement>('input[name="pos-payment"]')],
+  subtotalText: requireElement<HTMLElement>("pos-subtotal"),
+  taxRow: requireElement<HTMLElement>("pos-tax-row"),
+  taxLabel: requireElement<HTMLElement>("pos-tax-label"),
+  taxText: requireElement<HTMLElement>("pos-tax"),
+  totalPrimary: requireElement<HTMLElement>("pos-total-primary"),
+  totalSecondary: requireElement<HTMLElement>("pos-total-secondary"),
+  rateUsed: requireElement<HTMLElement>("pos-rate-used"),
+  saleAlert: requireElement<HTMLElement>("pos-sale-alert"),
+  confirmButton: requireElement<HTMLButtonElement>("pos-confirm"),
+  confirmHint: requireElement<HTMLElement>("pos-confirm-hint"),
+  checkoutWho: requireElement<HTMLButtonElement>("pos-checkout-who"),
+  checkoutWhoText: requireElement<HTMLElement>("pos-checkout-who-text"),
+  cartSetup: requireElement<HTMLElement>("pos-cart-setup"),
+  summaryCount: requireElement<HTMLElement>("pos-summary-count"),
+  summaryPrimary: requireElement<HTMLElement>("pos-summary-primary"),
+  summarySecondary: requireElement<HTMLElement>("pos-summary-secondary"),
+  summaryOpen: requireElement<HTMLButtonElement>("pos-summary-open"),
+  summaryCart: requireElement<HTMLButtonElement>("pos-summary-cart"),
+  summaryCharge: requireElement<HTMLButtonElement>("pos-summary-charge"),
+};
